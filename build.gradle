@@ -1,0 +1,53 @@
+apply plugin: 'groovy'
+apply plugin: 'scala'
+apply plugin: 'application'
+
+repositories {
+    mavenCentral()
+}
+
+mainClassName = "com.jellyfish85.srcParser.facade.SrcParserFacade"
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.1.5'
+
+    compile 'org.scala-lang:scala-compiler:2.9.2'
+
+    compile 'org.scala-lang:scala-library:2.9.2'
+
+    compile 'commons-io:commons-io:2.4'
+
+    //compile 'com.jellyfish85:dbaccessor:1.0-SNAPSHOT'
+    compile files('lib/dbaccessor.jar')
+
+    //compile 'com.jellyfish85:svnaccessor:1.0-SNAPSHOT'
+    compile files('lib/svnaccessor.jar')
+
+    runtime files('lib/classes12.jar')
+}
+
+mainClassName = "com.jellyfish85.patchRelease.facade.SrcFacade"
+run {
+    // dynamic arguments (from "-Prunargs=..." on gradle command line)
+    if (project.hasProperty('runargs')) {
+        args project.runargs.split(',')
+    }
+}
+
+task copyJava (type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "com.jellyfish85.srcParser.executor.RegisterSrcHeadRevision2DB"
+}
+
+/*
+task execScala (type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "com.jellyfish85.patchRelease.executor.PatchReleaseFacade"
+}
+
+task replaceStr (type: Copy) {
+    from 'src/main/resources'
+    into 'build'
+    filter(ReplaceTokens, tokens: [aaa: "AAA"])
+}
+*/
