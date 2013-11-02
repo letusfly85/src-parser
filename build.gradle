@@ -26,7 +26,7 @@ dependencies {
     runtime files('lib/classes12.jar')
 }
 
-mainClassName = "com.jellyfish85.patchRelease.facade.SrcFacade"
+mainClassName = "com.jellyfish85.srcParser.facade.SrcParserFacade"
 run {
     // dynamic arguments (from "-Prunargs=..." on gradle command line)
     if (project.hasProperty('runargs')) {

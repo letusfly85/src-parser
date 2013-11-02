@@ -4,9 +4,9 @@ import com.jellyfish85.srcParser.utils.ApplicationProperties
 
 class RegisterSrcHeadRevision2DB {
 
-  def main(args: Array[String]) {
+  def run(args: Array[String]) {
 
-    println(ApplicationProperties.src)
+    ApplicationProperties.targetProjectNames.foreach {projectName: String => println(projectName)}
 
   }
 

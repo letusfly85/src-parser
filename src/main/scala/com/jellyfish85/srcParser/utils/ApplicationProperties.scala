@@ -1,7 +1,7 @@
 package com.jellyfish85.srcParser.utils
 
 import java.util.Properties
-import java.io.{IOException, InputStreamReader, FileInputStream}
+import java.io._
 
 object ApplicationProperties {
 
@@ -15,20 +15,33 @@ object ApplicationProperties {
 
   def src:   String = {load; property.getProperty("src")  }
 
+  /**
+   *
+   * @since  2013/11/02
+   * @author wada.shunsuke
+   * @return project names
+   */
   def targetProjectNames: List[String] = {
     var list: List[String] = List()
 
     try {
-      val is: FileInputStream   = (getClass().getResourceAsStream("/projectName.lst")).asInstanceOf[FileInputStream]
-      val in: InputStreamReader = new InputStreamReader(is, "UTF8")
-      var ch: Int = 0
-      while ((ch = in.read()) != -1) {
-        list ::= Integer.toHexString(ch)
+      val inputStream: InputStream = getClass().getResourceAsStream("/projectName.lst")
+
+      val reader: BufferedReader =
+        new BufferedReader(new InputStreamReader(inputStream, "UTF-8"))
+
+      val buf: StringBuffer = new StringBuffer()
+      var switch: Boolean = true
+      var content: String = ""
+      while (switch) {
+        content = reader.readLine()
+        if (content.eq(null)) {
+          switch = false
+
+        } else {
+          list ::= content
+        }
       }
-      in.close()
-    } catch  {
-      case e:IOException =>
-        e.printStackTrace()
     }
 
     list
