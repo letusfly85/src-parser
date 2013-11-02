@@ -2,8 +2,7 @@ package com.jellyfish85.srcParser.executor
 
 import com.jellyfish85.srcParser.utils.ApplicationProperties
 import com.jellyfish85.svnaccessor.getter.SVNGetFiles
-import com.jellyfish85.svnaccessor.manager.SVNManager
-import org.tmatesoft.svn.core.io.SVNRepository
+import com.jellyfish85.svnaccessor.bean.SVNRequestBean
 
 class RegisterSrcHeadRevision2DB {
 
@@ -11,13 +10,14 @@ class RegisterSrcHeadRevision2DB {
 
     val projectNames: List[String] = ApplicationProperties.targetProjectNames
 
-    val manager: SVNManager = new SVNManager
-    val repository: SVNRepository = manager.repository
+    val getter: SVNGetFiles = new SVNGetFiles
 
-    val getter: SVNGetFiles = new SVNGet
-
-
-
+    def simpleFilter(bean: SVNRequestBean): Boolean = {
+      bean.path.matches(".*/" + ApplicationProperties.src + "/.*")
+    }
+    projectNames.foreach {projectName: String =>
+      val path = ApplicationProperties.app + projectName
+      getter.getSVNInfo(path, simpleFilter)
+    }
   }
-
 }
