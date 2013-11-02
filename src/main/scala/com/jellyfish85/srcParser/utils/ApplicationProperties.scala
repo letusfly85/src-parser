@@ -15,6 +15,8 @@ object ApplicationProperties {
 
   def src:   String = {load; property.getProperty("src")  }
 
+  def app:   String = {load; property.getProperty("app")  }
+
   /**
    *
    * @since  2013/11/02
