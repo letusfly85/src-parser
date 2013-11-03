@@ -20,12 +20,14 @@ class ConvSVNRequestBean2RsSvnSrcInfoBean {
       entry.headRevisionAttr.value = bean.revision.asInstanceOf[BigDecimal]
       entry.revisionAttr.value     = bean.revision.asInstanceOf[BigDecimal]
 
-      entry.projectNameAttr        = projectName
-      entry.extensionAttr          = FilenameUtils.getExtentions(entry.fileNameAttr.value)
+      entry.projectNameAttr.value  = projectName
+      entry.extensionAttr.value    = FilenameUtils.getExtension(entry.fileNameAttr.value)
 
+
+      resultSets ::= entry
     }
 
-
+    resultSets
   }
 
 }

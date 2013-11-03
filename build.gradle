@@ -26,6 +26,8 @@ dependencies {
     compile files('lib/svnaccessor.jar')
 
     runtime files('lib/classes12.jar')
+
+    runtime files('lib/ojdbc14.jar')
 }
 
 mainClassName = "com.jellyfish85.srcParser.facade.SrcParserFacade"
