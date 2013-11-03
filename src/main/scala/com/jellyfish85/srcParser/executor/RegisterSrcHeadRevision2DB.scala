@@ -31,10 +31,12 @@ class RegisterSrcHeadRevision2DB extends ExecutorTrait {
       list :::= getter.getSVNInfo(path, simpleFilter)
       list.foreach (x => println(x.fileName))
 
+      println("start")
       val targetList: List[RsSvnSrcInfoBean] = converter.convert(list, projectName)
-
+      println("start2")
       if (!targetList.isEmpty) {dao.insert(db.conn, targetList)}
       db.jCommit
+      println("end")
 
       sys.exit()
     }

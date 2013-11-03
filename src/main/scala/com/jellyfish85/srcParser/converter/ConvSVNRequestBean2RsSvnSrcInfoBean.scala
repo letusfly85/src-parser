@@ -13,20 +13,31 @@ class ConvSVNRequestBean2RsSvnSrcInfoBean {
 
     targetList.foreach {bean: SVNRequestBean =>
 
-      val entry: RsSvnSrcInfoBean = new RsSvnSrcInfoBean
+      try {
+        val entry: RsSvnSrcInfoBean = new RsSvnSrcInfoBean
 
-      entry.pathAttr.value         = bean.path
-      entry.fileNameAttr.value     = bean.fileName
-      entry.headRevisionAttr.value = bean.headRevision.asInstanceOf[BigDecimal]
-      entry.revisionAttr.value     = bean.revision.asInstanceOf[BigDecimal]
 
-      entry.projectNameAttr.value  = projectName
-      entry.extensionAttr.value    = FilenameUtils.getExtension(entry.fileNameAttr.value)
+        entry.pathAttr.value         = bean.path
+        entry.fileNameAttr.value     = bean.fileName
+        entry.headRevisionAttr.value = new BigDecimal(bean.headRevision)
+        entry.revisionAttr.value     = new BigDecimal(bean.revision)
 
-      resultSets ::= entry
+        entry.projectNameAttr.value  = projectName
+        entry.extensionAttr.value    = FilenameUtils.getExtension(entry.fileNameAttr.value)
+
+        entry.authorAttr.value       = bean.author
+        entry.commitYmdAttr          = bean.commitYmd
+        entry.commitHmsAttr          = bean.commitHms
+
+        resultSets ::= entry
+
+      } catch {
+        case e: Exception =>
+          println(bean.path)
+          e.printStackTrace()
+      }
     }
 
     resultSets
   }
-
 }
