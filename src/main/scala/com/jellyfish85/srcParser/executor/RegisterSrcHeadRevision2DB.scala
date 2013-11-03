@@ -21,24 +21,25 @@ class RegisterSrcHeadRevision2DB extends ExecutorTrait {
     }
 
     val dao: RsSvnSrcInfoDao = new RsSvnSrcInfoDao
+    dao.deleteAll(db.conn)
+    db.jCommit
+
     val converter: ConvSVNRequestBean2RsSvnSrcInfoBean = new ConvSVNRequestBean2RsSvnSrcInfoBean
 
     var list: List[SVNRequestBean] = List()
     projectNames.foreach {projectName: String =>
+      list = List()
+
       val path = ApplicationProperties.app + projectName
       println("getting info " + path + " .....")
 
-      list :::= getter.getSVNInfo(path, simpleFilter)
-      list.foreach (x => println(x.fileName))
+      list = getter.getSVNInfo(path, simpleFilter)
+      //list.foreach (x => println(x.fileName))
 
-      println("start")
       val targetList: List[RsSvnSrcInfoBean] = converter.convert(list, projectName)
-      println("start2")
       if (!targetList.isEmpty) {dao.insert(db.conn, targetList)}
       db.jCommit
-      println("end")
 
-      sys.exit()
     }
 
     databaseFinalize

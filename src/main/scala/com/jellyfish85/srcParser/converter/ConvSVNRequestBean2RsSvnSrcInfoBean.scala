@@ -16,7 +16,6 @@ class ConvSVNRequestBean2RsSvnSrcInfoBean {
       try {
         val entry: RsSvnSrcInfoBean = new RsSvnSrcInfoBean
 
-
         entry.pathAttr.value         = bean.path
         entry.fileNameAttr.value     = bean.fileName
         entry.headRevisionAttr.value = new BigDecimal(bean.headRevision)
@@ -26,8 +25,8 @@ class ConvSVNRequestBean2RsSvnSrcInfoBean {
         entry.extensionAttr.value    = FilenameUtils.getExtension(entry.fileNameAttr.value)
 
         entry.authorAttr.value       = bean.author
-        entry.commitYmdAttr          = bean.commitYmd
-        entry.commitHmsAttr          = bean.commitHms
+        entry.commitYmdAttr.value    = bean.commitYmd
+        entry.commitHmsAttr.value    = bean.commitHms
 
         resultSets ::= entry
 
