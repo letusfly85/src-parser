@@ -16,8 +16,9 @@ class RegisterSrcHeadRevision2DB extends ExecutorTrait {
 
     val getter: SVNGetFiles = new SVNGetFiles
 
+    val src: String =  ApplicationProperties.src
     def simpleFilter(bean: SVNRequestBean): Boolean = {
-      bean.path.matches(".*" + ApplicationProperties.src + "/.*")
+      bean.path.matches(".*" + src + "/.*")
     }
 
     val dao: RsSvnSrcInfoDao = new RsSvnSrcInfoDao
@@ -34,7 +35,6 @@ class RegisterSrcHeadRevision2DB extends ExecutorTrait {
       println("getting info " + path + " .....")
 
       list = getter.getSVNInfo(path, simpleFilter)
-      //list.foreach (x => println(x.fileName))
 
       val targetList: List[RsSvnSrcInfoBean] = converter.convert(list, projectName)
       if (!targetList.isEmpty) {dao.insert(db.conn, targetList)}
