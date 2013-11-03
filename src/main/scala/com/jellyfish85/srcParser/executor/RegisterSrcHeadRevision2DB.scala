@@ -5,12 +5,12 @@ import com.jellyfish85.svnaccessor.getter.SVNGetFiles
 import com.jellyfish85.svnaccessor.bean.SVNRequestBean
 import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSvnSrcInfoDao
 import com.jellyfish85.srcParser.converter.ConvSVNRequestBean2RsSvnSrcInfoBean
+import com.jellyfish85.dbaccessor.src.mainte.tool.RsSvnSrcInfoBean
 
 class RegisterSrcHeadRevision2DB extends ExecutorTrait {
 
   def run(args: Array[String]){
     databaseInitialize
-
 
     val projectNames: List[String] = ApplicationProperties.targetProjectNames
 
@@ -31,11 +31,14 @@ class RegisterSrcHeadRevision2DB extends ExecutorTrait {
       list :::= getter.getSVNInfo(path, simpleFilter)
       list.foreach (x => println(x.fileName))
 
-      sys.exit()
-      dao.insert(db.conn, converter.convert(list, projectName))
+      val targetList: List[RsSvnSrcInfoBean] = converter.convert(list, projectName)
+
+      if (!targetList.isEmpty) {dao.insert(db.conn, targetList)}
       db.jCommit
+
+      sys.exit()
     }
 
-    db.jClose
+    databaseFinalize
   }
 }

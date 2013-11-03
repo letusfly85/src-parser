@@ -12,4 +12,7 @@ trait ExecutorTrait {
     db.connect
 
   }
+
+  def databaseFinalize {db.jClose}
+
 }

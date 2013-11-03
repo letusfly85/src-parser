@@ -17,12 +17,11 @@ class ConvSVNRequestBean2RsSvnSrcInfoBean {
 
       entry.pathAttr.value         = bean.path
       entry.fileNameAttr.value     = bean.fileName
-      entry.headRevisionAttr.value = bean.revision.asInstanceOf[BigDecimal]
+      entry.headRevisionAttr.value = bean.headRevision.asInstanceOf[BigDecimal]
       entry.revisionAttr.value     = bean.revision.asInstanceOf[BigDecimal]
 
       entry.projectNameAttr.value  = projectName
       entry.extensionAttr.value    = FilenameUtils.getExtension(entry.fileNameAttr.value)
-
 
       resultSets ::= entry
     }
