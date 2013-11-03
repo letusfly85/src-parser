@@ -7,9 +7,8 @@ object ApplicationProperties {
 
   val property: Properties = new Properties()
 
-  def load {
-    property.load(getClass().getResourceAsStream("/workspace.properties"))
-  }
+  def load = property.load(getClass().getResourceAsStream("/workspace.properties"))
+  //def init = property.load(getClass().getResourceAsStream("/workspace.properties"))
 
   def trunk: String = {load; property.getProperty("trunk")}
 
