@@ -8,7 +8,6 @@ object ApplicationProperties {
   val property: Properties = new Properties()
 
   def load = property.load(getClass().getResourceAsStream("/workspace.properties"))
-  //def init = property.load(getClass().getResourceAsStream("/workspace.properties"))
 
   def trunk: String = {load; property.getProperty("trunk")}
 
@@ -31,7 +30,6 @@ object ApplicationProperties {
       val reader: BufferedReader =
         new BufferedReader(new InputStreamReader(inputStream, "UTF-8"))
 
-      val buf: StringBuffer = new StringBuffer()
       var switch: Boolean = true
       var content: String = ""
       while (switch) {

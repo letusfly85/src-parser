@@ -7,6 +7,18 @@ import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSvnSrcInfoDao
 import com.jellyfish85.srcParser.converter.ConvSVNRequestBean2RsSvnSrcInfoBean
 import com.jellyfish85.dbaccessor.src.mainte.tool.RsSvnSrcInfoBean
 
+/**
+ * == RegisterSrcHeadRevision2DB ==
+ *
+ * This class will be called when the beginning of a day.
+ * After then, the diff getter class will gather information from subversion by jenkins polling.
+ *
+ * @author wada shunsuke
+ *
+ * @example
+ *   gradle run -Prunargs=com.jellyfish85.srcParser.executor.RegisterSrcHeadRevision2DB
+ *
+ */
 class RegisterSrcHeadRevision2DB extends ExecutorTrait {
 
   def run(args: Array[String]){
