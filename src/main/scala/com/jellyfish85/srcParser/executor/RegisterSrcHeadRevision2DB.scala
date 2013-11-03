@@ -37,7 +37,8 @@ class RegisterSrcHeadRevision2DB extends ExecutorTrait {
     dao.deleteAll(db.conn)
     db.jCommit
 
-    val converter: ConvSVNRequestBean2RsSvnSrcInfoBean = new ConvSVNRequestBean2RsSvnSrcInfoBean
+    val converter: ConvSVNRequestBean2RsSvnSrcInfoBean =
+      new ConvSVNRequestBean2RsSvnSrcInfoBean
 
     var list: List[SVNRequestBean] = List()
     projectNames.foreach {projectName: String =>
