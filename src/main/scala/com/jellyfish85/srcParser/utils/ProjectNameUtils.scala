@@ -1,7 +1,5 @@
 package com.jellyfish85.srcParser.utils
 
-//case class ProjectName(projectName: String)
-
 trait ProjectNameUtils {
   val projectNameList: List[String] = ApplicationProperties.targetProjectNames
 
