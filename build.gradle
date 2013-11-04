@@ -6,8 +6,6 @@ repositories {
     mavenCentral()
 }
 
-mainClassName = "com.jellyfish85.srcParser.facade.SrcParserFacade"
-
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.1.5'
 
@@ -36,11 +34,6 @@ run {
     if (project.hasProperty('runargs')) {
         args project.runargs.split(',')
     }
-}
-
-task copyJava (type: JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
-    main = "com.jellyfish85.srcParser.executor.RegisterSrcHeadRevision2DB"
 }
 
 /*

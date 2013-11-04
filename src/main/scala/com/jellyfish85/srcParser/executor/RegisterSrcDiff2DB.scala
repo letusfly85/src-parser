@@ -3,7 +3,7 @@ package com.jellyfish85.srcParser.executor
 import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSvnSrcInfoDao
 import java.math.BigDecimal
 import com.jellyfish85.svnaccessor.bean.SVNDiffBean
-import com.jellyfish85.svnaccessor.getter.SVNDiffGetter
+import com.jellyfish85.svnaccessor.getter.{SVNGetFiles, SVNDiffGetter}
 import com.jellyfish85.srcParser.utils.ApplicationProperties
 import com.jellyfish85.svnaccessor.manager.SVNManager
 
@@ -34,11 +34,15 @@ class RegisterSrcDiff2DB extends ExecutorTrait {
     val getter: SVNDiffGetter = new SVNDiffGetter
     val list: List[SVNDiffBean] = getter.get(headPath, preHeadRevision.longValue())
 
+    val modifier: SVNGetFiles = new SVNGetFiles
+    val _list: List[SVNDiffBean] = modifier.modifyAttribute2Current(list)
 
-    //TODO get detail of the source and register database
-    list.foreach {bean: SVNDiffBean =>
-      println(bean.fileName)
+    _list.foreach {diff: SVNDiffBean =>
+      dao.merge(db.conn, diff)
     }
+    db.jCommit
+
+    databaseFinalize
   }
 
 }
