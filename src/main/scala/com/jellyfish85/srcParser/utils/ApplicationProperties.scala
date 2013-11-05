@@ -9,11 +9,15 @@ object ApplicationProperties {
 
   def load = property.load(getClass().getResourceAsStream("/workspace.properties"))
 
+  def workspace: String = {load; property.getProperty("workspace")}
+
   def trunk: String = {load; property.getProperty("trunk")}
 
   def src:   String = {load; property.getProperty("src")  }
 
   def app:   String = {load; property.getProperty("app")  }
+
+  def page:  String = {load; property.getProperty("page")}
 
   /**
    *
@@ -45,6 +49,10 @@ object ApplicationProperties {
 
     list
   }
+}
+
+class ApplicationProperties {
+  val app = ApplicationProperties
 }
 
 

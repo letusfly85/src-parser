@@ -36,6 +36,13 @@ run {
     }
 }
 
+task ParsePageActions (type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "com.jellyfish85.srcParser.runner.PageActionsRunner"
+    args = project.runargs.split(',').toList()
+}
+
+
 /*
 task execScala (type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath

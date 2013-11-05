@@ -6,13 +6,13 @@ trait ExecutorTrait {
 
   var db: DatabaseManager = null
 
-  def databaseInitialize {
+  def databaseInitialize() {
     db = new DatabaseManager
 
     db.connect
 
   }
 
-  def databaseFinalize {db.jClose}
+  def databaseFinalize() {db.jClose}
 
 }
