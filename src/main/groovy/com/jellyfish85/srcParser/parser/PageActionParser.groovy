@@ -3,6 +3,7 @@ package com.jellyfish85.srcParser.parser
 import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsPageActionIdxBean
 import com.jellyfish85.dbaccessor.src.mainte.tool.RsSvnSrcInfoBean
 import com.jellyfish85.srcParser.utils.ApplicationProperties
+import org.xml.sax.SAXParseException
 
 import javax.xml.parsers.DocumentBuilder
 import javax.xml.parsers.DocumentBuilderFactory
@@ -35,31 +36,54 @@ class PageActionParser {
     ) {
         def resultSets = new ArrayList<RsPageActionIdxBean>()
 
-        def file = new File(app.workspace(), bean.pathAttr().value())
-        if (!file.exists()) {
-            new RuntimeException("file is not exists!")
-        }
+        try {
+            def file = new File(app.workspace(), bean.pathAttr().value())
+            if (!file.exists()) {
+                new RuntimeException("file is not exists!")
+            }
 
-        DocumentBuilderFactory factory   = DocumentBuilderFactory.newInstance()
-        DocumentBuilder        db        = factory.newDocumentBuilder()
-        org.w3c.dom.Document   doc       = db.parse(file)
+            DocumentBuilderFactory factory   = DocumentBuilderFactory.newInstance()
+            DocumentBuilder        db        = factory.newDocumentBuilder()
+            org.w3c.dom.Document   doc       = db.parse(file)
 
-        Element elem                     = doc.getDocumentElement()
-        NodeList nodeList                = elem.getElementsByTagName("action")
-        nodeList.each {Node node ->
+            Element elem                     = doc.getDocumentElement()
+            NodeList nodeList                = elem.getElementsByTagName("action")
 
-            Element entry  = (Element)node
+            if (nodeList.length == 0) {
+                return resultSets
+            }
 
-            def entity = new RsPageActionIdxBean()
+            for (int i = 0; i < nodeList.length; i++){
 
-            entity.fileNameAttr().setValue(bean.fileNameAttr().value())
-            entity.headRevisionAttr().setValue(bean.headRevisionAttr().value())
 
-            entity.actionNameAttr().setValue(entry.getAttribute("id"))
+                def node = nodeList.item(i)
+                Element entry  = (Element)node
 
-            //entity.subjectId      = elem.getAttribute("subjectId")
+                def entity = new RsPageActionIdxBean()
 
-            resultSets.add(entity)
+                entity.headRevisionAttr().setValue(bean.headRevisionAttr().value())
+                entity.projectNameAttr().setValue(bean.projectNameAttr().value())
+                entity.fileNameAttr().setValue(bean.fileNameAttr().value())
+                entity.pathAttr().setValue(bean.pathAttr().value())
+                entity.revisionAttr().setValue(bean.revisionAttr().value())
+                entity.authorAttr().setValue(bean.authorAttr().value())
+                entity.commitYmdAttr().setValue(bean.commitYmdAttr().value())
+                entity.commitHmsAttr().setValue(bean.commitHmsAttr().value())
+                //entity.pageNameAttr().setValue(FilenameUtils.)
+                entity.extensionAttr().setValue(bean.extensionAttr().value())
+
+                entity.actionNameAttr().setValue(entry.getAttribute("id"))
+
+                resultSets.add(entity)
+                //println("[TARGET]" + bean.pathAttr().value())
+            }
+
+        } catch (SAXParseException e) {
+            println("[PARSE-ERROR]" + bean.pathAttr().value())
+
+        } catch (Exception e) {
+            println("[RUNTIME-ERROR]" + bean.pathAttr().value())
+
         }
 
         return resultSets
