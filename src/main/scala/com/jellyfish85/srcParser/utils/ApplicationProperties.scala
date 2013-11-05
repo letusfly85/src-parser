@@ -49,6 +49,31 @@ object ApplicationProperties {
 
     list
   }
+
+  def configFileNames: List[String] = {
+    var list: List[String] = List()
+
+    try {
+      val inputStream: InputStream = getClass().getResourceAsStream("/configFileName.lst")
+
+      val reader: BufferedReader =
+        new BufferedReader(new InputStreamReader(inputStream, "UTF-8"))
+
+      var switch: Boolean = true
+      var content: String = ""
+      while (switch) {
+        content = reader.readLine()
+        if (content.eq(null)) {
+          switch = false
+
+        } else {
+          list ::= content
+        }
+      }
+    }
+
+    list
+  }
 }
 
 class ApplicationProperties {

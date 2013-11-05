@@ -1,6 +1,5 @@
 package com.jellyfish85.srcParser.runner
 
-import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsPageActionIdxBean
 import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsPageActionIdxDao
 import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSvnSrcInfoDao
 import com.jellyfish85.dbaccessor.manager.DatabaseManager
@@ -32,14 +31,10 @@ class PageActionsRunner {
         String mode = args[0]
         if (mode == "all") {
           //download all page files and parse them
-          dl.downLoadAll(app, requestList)
-
+          //dl.downLoadAll(app, requestList)
 
           //TODO avoid include JavaScript function source.
           def resultSets = parser.parse(app, svnList)
-          /*resultSets.each {RsPageActionIdxBean x ->
-              println(x.fileNameAttr().value() + "\t" + x.actionNameAttr().value())
-          }*/
 
           // insert parse results to database
           register.deleteAll(db.conn())

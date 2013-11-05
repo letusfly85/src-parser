@@ -55,33 +55,43 @@ class PageActionParser {
 
             for (int i = 0; i < nodeList.length; i++){
 
-
                 def node = nodeList.item(i)
                 Element entry  = (Element)node
+                //println("[_TARGET]" + bean.pathAttr().value() + "\t" + entry.getAttribute("id"))
 
-                def entity = new RsPageActionIdxBean()
+                def _nodeList = entry.getElementsByTagName("param")
+                if (_nodeList.length > 0) {
+                    for (int k = 0; k < nodeList.length; k++){
+                        def _node = _nodeList.item(k)
 
-                entity.headRevisionAttr().setValue(bean.headRevisionAttr().value())
-                entity.projectNameAttr().setValue(bean.projectNameAttr().value())
-                entity.fileNameAttr().setValue(bean.fileNameAttr().value())
-                entity.pathAttr().setValue(bean.pathAttr().value())
-                entity.revisionAttr().setValue(bean.revisionAttr().value())
-                entity.authorAttr().setValue(bean.authorAttr().value())
-                entity.commitYmdAttr().setValue(bean.commitYmdAttr().value())
-                entity.commitHmsAttr().setValue(bean.commitHmsAttr().value())
-                //entity.pageNameAttr().setValue(FilenameUtils.)
-                entity.extensionAttr().setValue(bean.extensionAttr().value())
+                        def _entry = (Element)_node
+                        if (_node != null && _entry.hasAttribute("key") &&_entry.getAttribute("key") == "cmd") {
+                            def entity = new RsPageActionIdxBean()
+                            entity.headRevisionAttr().setValue(bean.headRevisionAttr().value())
+                            entity.projectNameAttr().setValue(bean.projectNameAttr().value())
+                            entity.fileNameAttr().setValue(bean.fileNameAttr().value())
+                            entity.pathAttr().setValue(bean.pathAttr().value())
+                            entity.revisionAttr().setValue(bean.revisionAttr().value())
+                            entity.authorAttr().setValue(bean.authorAttr().value())
+                            entity.commitYmdAttr().setValue(bean.commitYmdAttr().value())
+                            entity.commitHmsAttr().setValue(bean.commitHmsAttr().value())
+                            //entity.pageNameAttr().setValue(FilenameUtils.)
+                            entity.extensionAttr().setValue(bean.extensionAttr().value())
 
-                entity.actionNameAttr().setValue(entry.getAttribute("id"))
+                            entity.actionNameAttr().setValue(_entry.getAttribute("value"))
 
-                resultSets.add(entity)
-                //println("[TARGET]" + bean.pathAttr().value())
+                            resultSets.add(entity)
+                        }
+                    }
+                    println("[TARGET]" + bean.pathAttr().value())
+                }
             }
 
         } catch (SAXParseException e) {
             println("[PARSE-ERROR]" + bean.pathAttr().value())
 
         } catch (Exception e) {
+            e.printStackTrace()
             println("[RUNTIME-ERROR]" + bean.pathAttr().value())
 
         }
