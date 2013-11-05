@@ -36,6 +36,12 @@ run {
     }
 }
 
+task ConfigActionRunner (type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "com.jellyfish85.srcParser.runner.ConfigActionRunner"
+    args = project.runargs.split(',').toList()
+}
+
 task ParsePageActions (type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = "com.jellyfish85.srcParser.runner.PageActionsRunner"
