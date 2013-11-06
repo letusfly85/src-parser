@@ -1,5 +1,6 @@
 apply plugin: 'groovy'
 apply plugin: 'scala'
+//apply plugin: 'jruby'
 apply plugin: 'application'
 
 repositories {
@@ -17,16 +18,21 @@ dependencies {
 
     compile    'org.tmatesoft.svnkit:svnkit:1.3.3'
 
+    //compile    'org.jruby:gradle-jruby-plugin:0.1'
+
+    //compile 'org.clojure:clojure:1.2.0'
+
     //compile 'com.jellyfish85:dbaccessor:1.0-SNAPSHOT'
     compile files('lib/dbaccessor.jar')
 
     //compile 'com.jellyfish85:svnaccessor:1.0-SNAPSHOT'
     compile files('lib/svnaccessor.jar')
 
-    runtime files('lib/classes12.jar')
+    //runtime files('lib/classes12.jar')
 
     runtime files('lib/ojdbc14.jar')
 }
+
 
 mainClassName = "com.jellyfish85.srcParser.facade.SrcParserFacade"
 run {
@@ -35,7 +41,20 @@ run {
         args project.runargs.split(',')
     }
 }
-//apply plugin: 'jruby'
+
+/*
+buildscript {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+
+    dependencies{
+        classpath 'org.jruby:gradle-jruby-plugin:0.1'
+    }
+}
+apply plugin: 'jruby'
+*/
 
 task ConfigActionRunner (type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
@@ -46,6 +65,12 @@ task ConfigActionRunner (type: JavaExec) {
 task ParsePageActions (type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = "com.jellyfish85.srcParser.runner.PageActionsRunner"
+    args = project.runargs.split(',').toList()
+}
+
+task EraseSqlFw (type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "com.jellyfish85.srcParser.eraser.SqlFwEraser"
     args = project.runargs.split(',').toList()
 }
 
