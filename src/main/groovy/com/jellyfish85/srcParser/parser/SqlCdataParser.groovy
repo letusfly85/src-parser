@@ -6,6 +6,7 @@ import com.jellyfish85.srcParser.utils.ProjectNameUtils
 import com.jellyfish85.svnaccessor.bean.SVNRequestBean
 import org.apache.commons.io.FilenameUtils
 import org.w3c.dom.Element
+import org.w3c.dom.Node
 import org.xml.sax.SAXParseException
 
 import javax.xml.parsers.DocumentBuilderFactory
@@ -20,8 +21,8 @@ class SqlCdataParser {
 
     /**
      *
-     * @param app Application Property sets
-     * @param list of subversion bean
+     * @param  app Application Property sets
+     * @param  list of subversion bean
      * @return list of RS_SQL_CDATA bean
      */
     public static ArrayList<RsSqlCdataBean> parse(
@@ -92,7 +93,7 @@ class SqlCdataParser {
      */
     private static ArrayList<RsSqlCdataBean> walkNode(
         SVNRequestBean        bean,
-        Element               attr,
+        Node                  attr,
         String                projectName,
         String                persistentName
     ) {
@@ -104,6 +105,12 @@ class SqlCdataParser {
           persistentName = parent.getAttribute("name")
 
           resultSets.addAll(gatherSqlText(bean, projectName, attr.getTextContent(), persistentName))
+        }
+
+        def children = attr.getChildNodes()
+        for (int i = 0; i < children.length; i++) {
+            def child = children.item(i)
+            resultSets.addAll(walkNode(bean, child, projectName, persistentName))
         }
 
         return resultSets

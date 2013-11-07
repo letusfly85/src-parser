@@ -19,6 +19,11 @@ object ApplicationProperties {
 
   def page:  String = {load; property.getProperty("page")}
 
+  def uql:   String = {load; property.getProperty("uql")}
+
+  def al:    String = {load; property.getProperty("al")}
+
+
   /**
    *
    * @since  2013/11/02
