@@ -4,25 +4,17 @@ import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSqlCdataBean
 
 class SqlFwEraser {
 
-    public static String getErasedSqlText(ArrayList<RsSqlCdataBean> list , String sqlText) {
+    public String getErasedSqlText(ArrayList<RsSqlCdataBean> list) {
+        def result = ""
 
         list.each {RsSqlCdataBean bean ->
             def line = bean.textAttr().value()
+            //println(line)
+
+            result += replaceFrameworkVariant(line)
         }
 
-
-        if (sqlText =~ /abc/) {
-            return sqlText
-
-        } else {
-            return "abc"
-        }
-    }
-
-    public static void main(String[] args) {
-
-        println(getErasedSqlText("abcdefg"))
-
+        return result
     }
 
     /**
@@ -36,7 +28,15 @@ class SqlFwEraser {
     public static String replaceFrameworkVariant(String line) {
         def result = line
 
-        return result
+        result = result.replace("null", "NULL")
+
+        result = result.replaceFirst(/--%([a-z]+)/, "/* fw_flg */")
+
+        result = result.replaceAll(/\$:_([A-Za-z0-9.\_-]+)\$/,  ":variance")
+        result = result.replaceAll(/\$([A-Za-z0-9.\_-]+)\$/,    ":variance")
+        result = result.replaceAll(/:_a([a-z]{1})/,             ":variance")
+
+        return (result + "\n")
     }
 
     /**

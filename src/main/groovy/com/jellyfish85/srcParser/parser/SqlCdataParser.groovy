@@ -141,7 +141,13 @@ class SqlCdataParser {
             entry.projectNameAttr().setValue(projectName)
             entry.fileNameAttr().setValue(bean.fileName())
             entry.pathAttr().setValue(bean.path())
-            entry.persisterNameAttr().setValue(persistentName)
+
+            if (persistentName == "") {
+                entry.persisterNameAttr().setValue("NONE")
+            } else {
+                entry.persisterNameAttr().setValue(persistentName)
+            }
+
             entry.lineAttr().setValue(new BigDecimal(idx))
             entry.textAttr().setValue(line)
             entry.revisionAttr().setValue(new BigDecimal(bean.revision()))

@@ -13,17 +13,17 @@ public class BaseRunner {
 
     private static DatabaseManager manager = new DatabaseManager()
 
-    public static Connection getConnection() {
+    public Connection getConnection() {
         return this.manager.conn()
     }
 
-    public static void databaseInitialize() {
+    public void databaseInitialize() {
         println("database initialize..")
         println(".. getting connection ..")
         this.manager.connect()
     }
 
-    public static void databaseFinalize() {
+    public void databaseFinalize() {
         this.manager.jCommit()
         this.manager.jClose()
     }
