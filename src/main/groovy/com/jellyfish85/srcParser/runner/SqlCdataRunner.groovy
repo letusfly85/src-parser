@@ -36,7 +36,7 @@ class SqlCdataRunner {
            def sets = parser.parse(target, app)
            register.insert(conn, sets)
 
-           _context.manager.Jcommit()
+           _context.manager.jCommit()
        }
 
        _context.databaseFinalize()
