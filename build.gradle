@@ -68,9 +68,9 @@ task ParsePageActions (type: JavaExec) {
     args = project.runargs.split(',').toList()
 }
 
-task EraseSqlFw (type: JavaExec) {
+task SqlCdataRunner (type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
-    main = "com.jellyfish85.srcParser.eraser.SqlFwEraser"
+    main = "com.jellyfish85.srcParser.runner.SqlCdataRunner"
     args = project.runargs.split(',').toList()
 }
 

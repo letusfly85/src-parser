@@ -2,13 +2,19 @@ package com.jellyfish85.srcParser.parser
 
 import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSqlCdataBean
 import com.jellyfish85.srcParser.utils.ApplicationProperties
+import com.jellyfish85.srcParser.utils.ProjectNameUtils
 import com.jellyfish85.svnaccessor.bean.SVNRequestBean
+import org.apache.commons.io.FilenameUtils
 import org.w3c.dom.Element
 import org.xml.sax.SAXParseException
 
 import javax.xml.parsers.DocumentBuilderFactory
 
 class SqlCdataParser {
+
+    def getProjectName(String path)  {
+
+    }
 
     public SqlCdataParser() {}
 
@@ -57,7 +63,11 @@ class SqlCdataParser {
             def attr  = doc.getDocumentElement()
 
             def persistentName =  ""
-            resultSets.addAll(walkNode(bean, attr, app, persistentName))
+
+            //todo specify project name
+            def projectName = ""
+
+            resultSets.addAll(walkNode(bean, attr, projectName, persistentName))
 
         } catch (SAXParseException e) {
             println("[PARSE-ERROR]" + bean.path())
@@ -83,7 +93,7 @@ class SqlCdataParser {
     private static ArrayList<RsSqlCdataBean> walkNode(
         SVNRequestBean        bean,
         Element               attr,
-        ApplicationProperties app,
+        String                projectName,
         String                persistentName
     ) {
         def resultSets = new ArrayList<RsSqlCdataBean>()
@@ -93,7 +103,7 @@ class SqlCdataParser {
 
           persistentName = parent.getAttribute("name")
 
-          resultSets.addAll(gatherSqlText(bean, attr.getTextContent(), app, persistentName))
+          resultSets.addAll(gatherSqlText(bean, projectName, attr.getTextContent(), persistentName))
         }
 
         return resultSets
@@ -110,8 +120,8 @@ class SqlCdataParser {
      */
     private static ArrayList<RsSqlCdataBean> gatherSqlText(
         SVNRequestBean        bean,
+        String                projectName,
         String                text,
-        ApplicationProperties app,
         String                persistentName
     ) {
         def resultSets = new ArrayList<RsSqlCdataBean>()
@@ -119,14 +129,19 @@ class SqlCdataParser {
         def idx = 0
         text.split("\n").each {String line ->
             def entry  = new RsSqlCdataBean()
+
             entry.headRevisionAttr().setValue(new BigDecimal(bean.headRevision()))
-
-            //TODO add entry attributes
-
+            entry.projectNameAttr().setValue(projectName)
+            entry.fileNameAttr().setValue(bean.fileName())
+            entry.pathAttr().setValue(bean.path())
             entry.persisterNameAttr().setValue(persistentName)
             entry.lineAttr().setValue(new BigDecimal(idx))
             entry.textAttr().setValue(line)
-
+            entry.revisionAttr().setValue(new BigDecimal(bean.revision()))
+            entry.authorAttr().setValue(bean.author())
+            entry.commitYmdAttr().setValue(bean.commitYmd())
+            entry.commitHmsAttr().setValue(bean.commitHms())
+            entry.extensionAttr().setValue(FilenameUtils.getExtension(bean.path()))
 
             if (line.trim() != "" && line.trim() != null) {
                 idx += 1
