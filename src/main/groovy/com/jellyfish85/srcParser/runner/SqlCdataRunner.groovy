@@ -39,6 +39,19 @@ class SqlCdataRunner {
            _context.manager.jCommit()
        }
 
+       list = dao.findByExtension(conn, app.uql())
+
+       requestList = dao.convert(converter.convert(list))
+
+       dl.downLoadAll(app, requestList)
+
+       requestList.each {SVNRequestBean target ->
+           def sets = parser.parse(target, app)
+           register.insert(conn, sets)
+
+           _context.manager.jCommit()
+       }
+
        _context.databaseFinalize()
    }
 }
