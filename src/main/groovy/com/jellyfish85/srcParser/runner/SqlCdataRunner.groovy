@@ -4,7 +4,6 @@ import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSqlCdataBean
 import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSqlCdataDao
 import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSvnSrcInfoDao
 import com.jellyfish85.srcParser.converter.ConvRsSvnSrcInfoBean2SVNRequestBean
-import com.jellyfish85.srcParser.runner.BaseRunner
 import com.jellyfish85.srcParser.parser.SqlCdataParser
 import com.jellyfish85.srcParser.downloader.DownloadSource2Workspace
 import com.jellyfish85.svnaccessor.bean.SVNRequestBean
