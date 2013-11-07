@@ -33,8 +33,10 @@ class SqlCdataRunner {
        register.truncate(conn)
 
        requestList.each {SVNRequestBean target ->
-           def sets = parser.parse(bean, app)
+           def sets = parser.parse(target, app)
            register.insert(conn, sets)
+
+           _context.manager.Jcommit()
        }
 
        _context.databaseFinalize()
