@@ -97,7 +97,6 @@ class SqlFwEraser {
 
                 if (secondSqlText.isInWhereScope()){
                     secondSqlText.countUpWhereOpe()
-                    println(secondSqlText.whereOpeCounter())
                 }
 
                 if (secondSqlText.isInWhereScope()       &&
@@ -108,7 +107,7 @@ class SqlFwEraser {
                     if (!secondSqlText.line().matches(/.*AND.*/) &&
                         !secondSqlText.line().matches(/.*WHERE.*/)) {
 
-                        println((String)secondSqlText.whereOpeCounter() + "\tAND\t" + secondSqlText.line() + "\n")
+                        //println((String)secondSqlText.whereOpeCounter() + "\tAND\t" + secondSqlText.line() + "\n")
                         result += "\tAND\t" + secondSqlText.line() + "\n"
 
                     } else {
@@ -121,7 +120,7 @@ class SqlFwEraser {
             }
 
         }
-        println("==== " + result)
+
         return result
     }
 
