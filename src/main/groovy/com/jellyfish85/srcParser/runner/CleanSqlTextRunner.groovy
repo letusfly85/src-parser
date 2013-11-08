@@ -23,13 +23,12 @@ class CleanSqlTextRunner {
         targetList.each {RsSqlCdataBean target ->
             println(target.pathAttr().value())
 
-            def bean = dao.find(_context.getConnection(), target)
-
-            def list = dao.find(_context.getConnection(), bean)
-            def query = eraser.getErasedSqlText(dao.convert(list))
+            def _list = dao.find(_context.getConnection(), target)
+            def list  = dao.convert(_list)
+            def query = eraser.getErasedSqlText(list)
 
             def helper = new SqlCdata2SqlTextHelper()
-            def entries = helper.query2RsSqlTextBeanList(query, bean)
+            def entries = helper.query2RsSqlTextBeanList(query, list[0])
             register.delete(_context.getConnection(), entries[0])
             register.insert(_context.getConnection(), entries)
 
