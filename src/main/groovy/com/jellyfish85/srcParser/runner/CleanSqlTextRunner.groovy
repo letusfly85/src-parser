@@ -22,7 +22,7 @@ class CleanSqlTextRunner {
         def eraser = new SqlFwEraser()
         def query = eraser.getErasedSqlText(dao.convert(list))
 
-        println(query)
+        //println(query)
 
         _context.databaseFinalize()
     }

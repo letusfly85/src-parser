@@ -2,7 +2,6 @@ package com.jellyfish85.srcParser.parser
 
 import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSqlCdataBean
 import com.jellyfish85.srcParser.utils.ApplicationProperties
-import com.jellyfish85.srcParser.utils.ProjectNameUtils
 import com.jellyfish85.svnaccessor.bean.SVNRequestBean
 import org.apache.commons.io.FilenameUtils
 import org.w3c.dom.Element
@@ -13,6 +12,11 @@ import javax.xml.parsers.DocumentBuilderFactory
 
 class SqlCdataParser {
 
+    /**
+     *
+     * @todo
+     * @param path
+     */
     def getProjectName(String path)  {
 
     }
