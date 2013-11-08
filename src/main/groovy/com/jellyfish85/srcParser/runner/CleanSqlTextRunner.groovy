@@ -5,6 +5,7 @@ import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSqlCdataDao
 import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSqlTextDao
 import com.jellyfish85.srcParser.eraser.SqlFwEraser
 import com.jellyfish85.srcParser.helper.SqlCdata2SqlTextHelper
+import org.apache.commons.io.FilenameUtils
 
 class CleanSqlTextRunner {
 
@@ -40,7 +41,7 @@ class CleanSqlTextRunner {
         println(args[0])
         bean.pathAttr().setValue(args[0])
         bean.persisterNameAttr().setValue(args[1])
-        bean.fileNameAttr().setValue(args[2])
+        bean.fileNameAttr().setValue(FilenameUtils.getName(args[0]))
         def list = dao.find(_context.getConnection(), bean)
         def query = eraser.getErasedSqlText(dao.convert(list))
 
