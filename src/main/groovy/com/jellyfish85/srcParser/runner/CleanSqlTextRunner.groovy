@@ -15,15 +15,34 @@ class CleanSqlTextRunner {
         def dao = new RsSqlCdataDao()
         def register = new RsSqlTextDao()
 
-        //TODO get all bean from database after scratch
+        def eraser = new SqlFwEraser()
+
+        def _targetList = dao.findSummary(_context.getConnection())
+        def targetList = dao.convert(_targetList)
+
+        targetList.each {RsSqlCdataBean target ->
+            println(target.pathAttr().value())
+
+            def bean = dao.find(_context.getConnection(), target)
+
+            def list = dao.find(_context.getConnection(), bean)
+            def query = eraser.getErasedSqlText(dao.convert(list))
+
+            def helper = new SqlCdata2SqlTextHelper()
+            def entries = helper.query2RsSqlTextBeanList(query, bean)
+            register.delete(_context.getConnection(), entries[0])
+            register.insert(_context.getConnection(), entries)
+
+            _context.manager.jCommit()
+        }
+
+        /*
         def bean = new RsSqlCdataBean()
         println(args[0])
         bean.pathAttr().setValue(args[0])
         bean.persisterNameAttr().setValue(args[1])
         bean.fileNameAttr().setValue(args[2])
         def list = dao.find(_context.getConnection(), bean)
-
-        def eraser = new SqlFwEraser()
         def query = eraser.getErasedSqlText(dao.convert(list))
 
         println(query)
@@ -32,6 +51,7 @@ class CleanSqlTextRunner {
         def entries = helper.query2RsSqlTextBeanList(query, bean)
         register.delete(_context.getConnection(), entries[0])
         register.insert(_context.getConnection(), entries)
+        */
 
         _context.databaseFinalize()
     }
