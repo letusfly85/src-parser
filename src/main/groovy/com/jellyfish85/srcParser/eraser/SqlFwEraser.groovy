@@ -112,6 +112,7 @@ class SqlFwEraser {
 
                     if (!secondSqlText.line().matches(/.*AND.*/) &&
                         !secondSqlText.line().matches(/.*WHERE.*/) &&
+                        //todo user isOperator methods instead of reg expression
                         !secondSqlText.line().matches(/([\t|\s]+)\).*/)
                     ) {
 
