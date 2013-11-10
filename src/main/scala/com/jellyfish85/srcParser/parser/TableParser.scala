@@ -22,13 +22,13 @@ class TableParser {
 
     val tokens	= new CommonTokenStream(lexer)
 
-    val parser = new PLSQLParser(tokens)
+    val parser  = new PLSQLParser(tokens)
 
-    val result = parser.sql_statement
+    val result  = parser.sql_statement
 
-    val tree = result.getTree.asInstanceOf[CommonTree]
+    val tree    = result.getTree.asInstanceOf[CommonTree]
 
-    return tree
+    tree
   }
 
   /**
