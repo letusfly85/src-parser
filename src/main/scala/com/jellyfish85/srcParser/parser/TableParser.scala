@@ -17,19 +17,25 @@ class TableParser {
    * @return
    */
   def getCommonTree(sql: String): CommonTree = {
-    println(sql)
 
-    val stream: ANTLRStringStream = new ANTLRStringStream(sql.toLowerCase)
+    var tree: CommonTree = null
+    try {
+      val stream: ANTLRStringStream = new ANTLRStringStream(sql.toLowerCase)
 
-    val lexer   = new PLSQLLexer(stream)
+      val lexer   = new PLSQLLexer(stream)
 
-    val tokens  = new CommonTokenStream(lexer)
+      val tokens  = new CommonTokenStream(lexer)
 
-    val parser  = new PLSQLParser(tokens)
+      val parser  = new PLSQLParser(tokens)
 
-    val result  = parser.sql_statement
+      val result  = parser.sql_statement
 
-    val tree    = result.getTree.asInstanceOf[CommonTree]
+      tree    = result.getTree.asInstanceOf[CommonTree]
+
+    } catch {
+      case e: Exception =>
+        e.printStackTrace()
+    }
 
     tree
   }
@@ -91,8 +97,8 @@ class TableParser {
    * @return
    */
   def getCrudRecursive(target: RsSqlTablesBean, level: Int, sql: String) :List[RsSqlTablesBean]= {
-    var entry = new RsSqlTablesBean()
-    entry.fileNameAttr.value = target.fileNameAttr.value
+    //var entry = new RsSqlTablesBean()
+    var entry = target
 
     val tree = getCommonTree(sql)
     entry = getInitCrud(tree, entry, sql)
@@ -143,7 +149,13 @@ class TableParser {
         tableAttribute.tableAliasAttr.value = tree.getChild(0).getText
 
       case "TABLEVIEW_NAME" =>
+        //var tabAttr = tableAttribute
         val tabAttr = new RsSqlTablesBean
+        tabAttr.pathAttr.setValue(tableAttribute.pathAttr.value)
+        tabAttr.projectNameAttr.setValue(tableAttribute.projectNameAttr.value)
+        tabAttr.headRevisionAttr.setValue(tableAttribute.headRevisionAttr.value)
+        tabAttr.revisionAttr.setValue(tableAttribute.revisionAttr.value)
+
         tabAttr.tableNameAttr.value  = tree.getChild(0).getText
         tabAttr.tableAliasAttr.value = tableAttribute.tableAliasAttr.value
         tabAttr.depthAttr.value      = new BigDecimal(level)
@@ -156,6 +168,11 @@ class TableParser {
 
       case "SELECT_MODE"    =>
         val tabAttr = new RsSqlTablesBean
+        tabAttr.pathAttr.setValue(tableAttribute.pathAttr.value)
+        tabAttr.projectNameAttr.setValue(tableAttribute.projectNameAttr.value)
+        tabAttr.headRevisionAttr.setValue(tableAttribute.headRevisionAttr.value)
+        tabAttr.revisionAttr.setValue(tableAttribute.revisionAttr.value)
+
         tabAttr.tableNameAttr.value  = "INLINE VIEW"
         tabAttr.tableAliasAttr.value = tableAttribute.tableAliasAttr.value
         tabAttr.depthAttr.value      = new BigDecimal(level)
@@ -194,17 +211,9 @@ class TableParser {
 
     var tableAttributeList :List[RsSqlTablesBean] = List()
 
-    //println(tree.getText)
-
     tree.getText match {
       case "TABLE_REF" =>
-        val _sqlAttr = new RsSqlTablesBean
-        _sqlAttr.fileNameAttr.value      = sqlAttribute.fileNameAttr.value
-        _sqlAttr.pathAttr.value          = sqlAttribute.pathAttr.value
-        _sqlAttr.persisterNameAttr.value = sqlAttribute.persisterNameAttr.value
-        _sqlAttr.depthAttr.value         = new BigDecimal(level)
-
-        val _list = specifyTable(tree.getChild(0).asInstanceOf[CommonTree], _sqlAttr, level)
+        val _list = specifyTable(tree.getChild(0).asInstanceOf[CommonTree], sqlAttribute, (level+1))
 
         tableAttributeList :::= _list
 
@@ -217,7 +226,7 @@ class TableParser {
             for (i <- 0 until children.size()) {
 
               val nextTree = children.get(i).asInstanceOf[CommonTree]
-              val tabAttr = new RsSqlTablesBean()
+              val tabAttr = sqlAttribute
 
               tabAttr.fileNameAttr.value = sqlAttribute.fileNameAttr.value
               tabAttr.crudTypeAttr.value = sqlAttribute.crudTypeAttr.value
@@ -248,7 +257,7 @@ class TableParser {
 
     tree.getText match {
       case "TABLE_REF" =>
-        val tabAttrList = getCrudRecursive(sqlAttribute, level + 1, sql)
+        val tabAttrList = specifyTable(tree.getChild(0).asInstanceOf[CommonTree], sqlAttribute, (level+1))
 
         return tabAttrList
 
@@ -290,7 +299,7 @@ class TableParser {
         tableAttributeList ::= sqlAttribute
 
       case "SELECT_STATEMENT" =>
-        val tabAttrList = getCrudRecursive(sqlAttribute, level + 1, sql)
+        val tabAttrList = specifyTable(tree.getChild(0).asInstanceOf[CommonTree], sqlAttribute, (level+1))
         return tabAttrList
 
       //todo specify insert all statement
@@ -334,7 +343,7 @@ class TableParser {
         tableAttributeList ::= sqlAttribute
 
       case "select" =>
-        val tabAttrList = getCrudRecursive(sqlAttribute, level + 1, sql)
+        val tabAttrList = specifyTable(tree.getChild(0).asInstanceOf[CommonTree], sqlAttribute, (level+1))
         tableAttributeList :::= tabAttrList
 
       case _ =>

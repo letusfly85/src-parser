@@ -111,7 +111,9 @@ class SqlFwEraser {
                 ){
 
                     if (!secondSqlText.line().matches(/.*AND.*/) &&
-                        !secondSqlText.line().matches(/.*WHERE.*/)) {
+                        !secondSqlText.line().matches(/.*WHERE.*/) &&
+                        !secondSqlText.line().matches(/([\t|\s]+)\).*/)
+                    ) {
 
                         //println((String)secondSqlText.whereOpeCounter() + "\tAND\t" + secondSqlText.line() + "\n")
                         result += "\tAND\t" + secondSqlText.line() + "\n"

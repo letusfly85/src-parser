@@ -5,8 +5,9 @@ import org.apache.commons.io.FilenameUtils
 import com.jellyfish85.srcParser.utils.QueryBuilder
 import com.jellyfish85.srcParser.parser.TableParser
 
-import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSqlTextDao
+import com.jellyfish85.dbaccessor.dao.src.mainte.tool.{RsSqlTablesDao, RsSqlTextDao}
 import com.jellyfish85.dbaccessor.bean.src.mainte.tool.{RsSqlTablesBean, RsSqlTextBean}
+import com.jellyfish85.srcParser.converter.ConvRsSqlTextBean2RsSqlTablesBean
 
 
 /**
@@ -26,8 +27,13 @@ class ParseTableAttribute extends ExecutorTrait with QueryBuilder {
 
     databaseInitialize()
 
-    val dao:  RsSqlTextDao  = new RsSqlTextDao
+    val dao:       RsSqlTextDao  = new RsSqlTextDao
+    val parser:    TableParser   = new TableParser
+    val converter: ConvRsSqlTextBean2RsSqlTablesBean =
+                                   new ConvRsSqlTextBean2RsSqlTablesBean
+    def register: RsSqlTablesDao = new RsSqlTablesDao
 
+    /*
     val _bean: RsSqlTextBean = new RsSqlTextBean
     _bean.pathAttr.value          = args(0)
     _bean.fileNameAttr.value      = FilenameUtils.getName(args(0))
@@ -36,7 +42,6 @@ class ParseTableAttribute extends ExecutorTrait with QueryBuilder {
     val list: List[RsSqlTextBean]  = dao.find(db.conn, _bean)
     val sql:  String = queryBuild(list)
 
-    val parser: TableParser = new TableParser
 
     val entry = new RsSqlTablesBean
     entry.fileNameAttr.value      = _bean.fileNameAttr.value
@@ -44,9 +49,36 @@ class ParseTableAttribute extends ExecutorTrait with QueryBuilder {
     entry.persisterNameAttr.value = _bean.persisterNameAttr.value
 
     val resultSets: List[RsSqlTablesBean] = parser.getCrudRecursive(entry, 0, sql)
-    resultSets.foreach {result: RsSqlTablesBean =>
-      println(result.tableNameAttr.value)
-    }
-  }
 
+
+    register.delete(db.conn, entry)
+    register.insert(db.conn, resultSets)
+    */
+
+    val list: List[RsSqlTextBean] = dao.findSummary(db.conn)
+    list.foreach {bean: RsSqlTextBean =>
+
+      println("[TARGET]\t" + bean.pathAttr.value)
+      try {
+        val _list = dao.find(db.conn, bean)
+
+        val sql: String = queryBuild(_list)
+        val entry: RsSqlTablesBean = converter.convert(_list.head)
+
+        val resultSets: List[RsSqlTablesBean] = parser.getCrudRecursive(entry, 0, sql)
+
+        register.delete(db.conn, entry)
+        register.insert(db.conn, resultSets)
+
+        db.jCommit
+
+      } catch {
+        case e: Exception =>
+          db.jRollback
+          println("[ERROR]\t" + bean.pathAttr.value)
+      }
+    }
+
+    databaseFinalize()
+  }
 }
