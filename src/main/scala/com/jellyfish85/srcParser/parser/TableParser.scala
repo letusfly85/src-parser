@@ -120,4 +120,43 @@ class TableParser {
     list
   }
 
+  /**
+   * search table name and its alias that select statement calls
+   *
+   * @param tree
+   * @param sqlAttribute
+   * @param tableAttribute
+   * @return
+   */
+  def specifySelectSQLTable(tree :CommonTree, sqlAttribute :RsSqlTablesBean, tableAttribute: RsSqlTablesBean,
+                            level: Int, sql: String) :List[RsSqlTablesBean] = {
+
+    var tableAttributeList :List[RsSqlTablesBean] = List()
+
+    tree.getText match {
+      case "TABLE_REF" =>
+        val tabAttr = getCrudRecursive(sqlAttribute, level + 1, sql)
+        tableAttributeList :::= tabAttr
+
+      case _ =>
+        Option(tree.getChildren) match {
+          case None =>
+          case Some(children) =>
+            for (i <- 0 until children.size()) {
+              val nextTree = children.get(i).asInstanceOf[CommonTree]
+              val tabAttr = new RsSqlTablesBean()
+              tabAttr.fileNameAttr.value = sqlAttribute.fileNameAttr.value
+              tabAttr.crudTypeAttr.value = tableAttribute.crudTypeAttr.value
+              val tabAttrList = specifySelectSQLTable(nextTree, sqlAttribute, tabAttr, level, sql)
+
+              if (tabAttrList.size > 0) {
+                tableAttributeList :::= tabAttrList
+              }
+            }
+        }
+    }
+
+    tableAttributeList
+  }
+
 }
