@@ -25,4 +25,17 @@ class TableParser {
 
   }
 
+  def walkTree(tree: CommonTree) {
+    println(tree.getText)
+
+    if (tree.getChildCount > 0) {
+      for (i <- 0 to tree.getChildCount -1) {
+        val child: CommonTree = tree.getChild(i).asInstanceOf[CommonTree]
+
+        walkTree(child)
+      }
+    }
+
+  }
+
 }
