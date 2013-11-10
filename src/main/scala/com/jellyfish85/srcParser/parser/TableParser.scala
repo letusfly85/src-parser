@@ -4,10 +4,17 @@ import br.com.porcelli.parser._
 
 import org.antlr.runtime.{CommonTokenStream, ANTLRStringStream}
 import org.antlr.runtime.tree.CommonTree
+import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSqlTablesBean
 
 class TableParser {
 
-  def parse(sql: String) {
+  /**
+   * == getCommonTree ==
+   *
+   * @param sql
+   * @return
+   */
+  def getCommonTree(sql: String): CommonTree = {
 
     val stream: ANTLRStringStream = new ANTLRStringStream(sql.toLowerCase)
 
@@ -21,21 +28,96 @@ class TableParser {
 
     val tree = result.getTree.asInstanceOf[CommonTree]
 
-    println(tree)
-
+    return tree
   }
 
-  def walkTree(tree: CommonTree) {
-    println(tree.getText)
+  /**
+   * == getInitCrud ==
+   *
+   * @param tree
+   * @param entry
+   * @param sql
+   * @return
+   */
+  def getInitCrud(tree: CommonTree, entry: RsSqlTablesBean, sql: String): RsSqlTablesBean = {
+    val result: RsSqlTablesBean = entry
 
-    if (tree.getChildCount > 0) {
-      for (i <- 0 to tree.getChildCount -1) {
-        val child: CommonTree = tree.getChild(i).asInstanceOf[CommonTree]
+    tree.getText match {
+      case "SELECT_STATEMENT" =>
+        result.crudTypeAttr.value = "SELECT"
+        return result
+      case "insert" =>
+        result.crudTypeAttr.value = "INSERT"
+        return result
+      case "merge" =>
+        result.crudTypeAttr.value = "MERGE"
+        return result
+      case "update" =>
+        result.crudTypeAttr.value = "UPDATE"
+        return result
+      case "delete" =>
+        result.crudTypeAttr.value = "DELETE"
+        return result
+      case x =>
+        result.crudTypeAttr.value = "UNKNOWN"
+        Option(tree.getChildren) match {
+          case None =>
+            return result
 
-        walkTree(child)
-      }
+          case Some(children) =>
+            for (i <- 0 until children.size())  {
+              val nextTree = children.get(i).asInstanceOf[CommonTree]
+              val _result  = getInitCrud(nextTree, result, sql)
+
+              if (_result.crudTypeAttr.value != "UNKNOWN") {
+                return _result
+              }
+            }
+        }
     }
 
+    result
+  }
+
+  /**
+   * == getCrudRecursive ==
+   *
+   * @param target
+   * @param level
+   * @param sql
+   * @return
+   */
+  def getCrudRecursive(target: RsSqlTablesBean, level: Int, sql: String) :List[RsSqlTablesBean]= {
+    var entry = new RsSqlTablesBean()
+    entry.fileNameAttr.value = target.fileNameAttr.value
+
+    val tree = getCommonTree(sql)
+    entry = getInitCrud(tree, entry, sql)
+
+    var list :List[RsSqlTablesBean] = List()
+    /*
+    tableAttribute.crudType match {
+      case "SELECT" =>
+        list :::= specifySelectSQLTable(tree,sqlAttribute,tableAttribute,level)
+      case "DELETE" =>
+        list :::= specifyDeleteSQLTable(tree,sqlAttribute,tableAttribute,level)
+      case "INSERT" =>
+        list :::= specifyInsertSQLTable(tree,sqlAttribute,tableAttribute,level)
+      case "UPDATE" =>
+        list :::= specifyUpdateSQLTable(tree,sqlAttribute,tableAttribute,level)
+      case "MERGE"  =>
+        list ::= specifyMergeSQLTable(tree,sqlAttribute,tableAttribute,level)
+      case _ =>
+    }
+   */
+
+    list.foreach {bean =>
+      bean.fileNameAttr.value      = target.fileNameAttr.value
+      bean.persisterNameAttr.value = target.persisterNameAttr.value
+      bean.callTypeAttr.value      = "SQL"
+    }
+
+    list
   }
 
 }
