@@ -18,9 +18,9 @@ class TableParser {
 
     val stream: ANTLRStringStream = new ANTLRStringStream(sql.toLowerCase)
 
-    val lexer 	= new PLSQLLexer(stream)
+    val lexer   = new PLSQLLexer(stream)
 
-    val tokens	= new CommonTokenStream(lexer)
+    val tokens  = new CommonTokenStream(lexer)
 
     val parser  = new PLSQLParser(tokens)
 
@@ -151,6 +151,43 @@ class TableParser {
 
               if (tabAttrList.size > 0) {
                 tableAttributeList :::= tabAttrList
+              }
+            }
+        }
+    }
+
+    tableAttributeList
+  }
+
+  /**
+   * delete SQLが参照する第一レベルのテーブルを特定する
+   *
+   * @param tree
+   * @param sqlAttribute
+   * @param tableAttribute
+   * @return
+   */
+  def specifyDeleteSQLTable(tree :CommonTree, sqlAttribute :RsSqlTablesBean,
+                            tableAttribute: RsSqlTablesBean, level: Int, sql: String) :List[RsSqlTablesBean] = {
+
+    val tableAttributeList :List[RsSqlTablesBean] = List()
+
+    tree.getText match {
+      case "TABLE_REF" =>
+        val tabAttrList = getCrudRecursive(sqlAttribute, level + 1, sql)
+        return tabAttrList
+
+      case _ =>
+        Option(tree.getChildren) match {
+          case None =>
+            return (tableAttribute :: tableAttributeList)
+          case Some(children) =>
+            for (i <- 0 to children.size() -1) {
+              val nextTree = children.get(i).asInstanceOf[CommonTree]
+              val tabAttrList = specifyDeleteSQLTable(nextTree, sqlAttribute, tableAttribute, level, sql)
+
+              if (tabAttrList.size > 0) {
+                return tabAttrList
               }
             }
         }
