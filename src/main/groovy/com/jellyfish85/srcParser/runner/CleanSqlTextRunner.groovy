@@ -20,8 +20,13 @@ class CleanSqlTextRunner {
 
 
         def _targetList = dao.findSummaryByExtension(_context.getConnection(), _context.app.uql())
-        _targetList.addAll(dao.findSummaryByExtension(_context.getConnection(), _context.app.al()))
-        def targetList = dao.convert(_targetList)
+        _targetList = dao.convert(_targetList)
+
+        _targetList.addAll(dao.convert(
+                    dao.findSummaryByExtension(_context.getConnection(), _context.app.al())
+                )
+            )
+        def targetList = _targetList
 
         targetList.each {RsSqlCdataBean target ->
             println(target.pathAttr().value())
