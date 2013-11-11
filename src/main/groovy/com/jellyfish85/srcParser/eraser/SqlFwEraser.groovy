@@ -91,6 +91,11 @@ class SqlFwEraser {
                 firstSqlText.setIsWhereEndLine(false)
             }
 
+            if (line.toUpperCase() =~ /.*GROUP.*/) {
+                firstSqlText.setIsInWhereScope(false)
+                firstSqlText.setIsWhereEndLine(false)
+            }
+
             if (line.matches(/.*\/\* fw_flg \*\/.*/)) {
                 firstSqlText.setFwFlg(true)
             }
