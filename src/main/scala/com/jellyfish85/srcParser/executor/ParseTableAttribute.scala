@@ -75,7 +75,8 @@ class ParseTableAttribute extends ExecutorTrait with QueryBuilder {
       } catch {
         case e: Exception =>
           db.jRollback
-          println("[ERROR]\t" + bean.pathAttr.value)
+          println("[ERROR]\t" + bean.persisterNameAttr.value + "\t" + bean.pathAttr.value)
+          e.printStackTrace()
       }
     }
 
