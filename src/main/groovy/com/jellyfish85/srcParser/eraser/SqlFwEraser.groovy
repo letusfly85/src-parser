@@ -10,7 +10,6 @@ class SqlFwEraser {
 
         list.each {RsSqlCdataBean bean ->
             def line = bean.textAttr().value()
-            //println(line)
 
             result += replaceFrameworkVariant(line)
 
@@ -121,20 +120,24 @@ class SqlFwEraser {
 
                     if (!secondSqlText.line().matches(/.*AND.*/) &&
                         !secondSqlText.line().matches(/.*WHERE.*/) &&
-                        //todo user isOperator methods instead of reg expression
-                        //!secondSqlText.line().matches(/([\t|\s]+)\).*/) &&
                         !isOperator(secondSqlText.line())
                     ) {
 
                         //println((String)secondSqlText.whereOpeCounter() + "\tAND\t" + secondSqlText.line() + "\n")
-                        result += "\tAND\t" + secondSqlText.line() + "\n"
+                        if (secondSqlText.line() != null && secondSqlText.line() != "") {
+                            result += "\tAND\t" + secondSqlText.line() + "\n"
+                        }
 
                     } else {
-                        result += secondSqlText.line() + "\n"
+                        if (secondSqlText.line() != null && secondSqlText.line() != "") {
+                            result += secondSqlText.line() + "\n"
+                        }
                     }
 
                 } else {
-                    result += secondSqlText.line() + "\n"
+                    if (secondSqlText.line() != null && secondSqlText.line() != "") {
+                        result += secondSqlText.line() + "\n"
+                    }
                 }
             }
 
