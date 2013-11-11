@@ -23,6 +23,12 @@ object ApplicationProperties {
 
   def al:    String = {load; property.getProperty("al")}
 
+  def boj:   String = {load; property.getProperty("boj")}
+
+  def sql:   String = {load; property.getProperty("sql")}
+
+  def expSqlPath: String = {load; property.getProperty("expSqlPath")}
+
 
   /**
    *

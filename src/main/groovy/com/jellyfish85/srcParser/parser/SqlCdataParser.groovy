@@ -168,4 +168,103 @@ class SqlCdataParser {
 
         return resultSets
     }
+
+
+    /**
+     *
+     * @param  app Application Property sets
+     * @param  list of subversion bean
+     * @return list of RS_SQL_CDATA bean
+     */
+    public static ArrayList<RsSqlCdataBean> parseExp(
+            ArrayList<SVNRequestBean> list,
+            ApplicationProperties app
+    ) {
+        def resultSets = new ArrayList<RsSqlCdataBean>()
+
+        list.each {SVNRequestBean bean ->
+            resultSets.add(parseExp(bean, app))
+        }
+
+        return resultSets
+    }
+
+    /**
+     *
+     *
+     * @param bean
+     * @param app
+     * @return
+     */
+    public static ArrayList<RsSqlCdataBean> parseExp(
+            SVNRequestBean bean,
+            ApplicationProperties app
+    ) {
+        def resultSets = new ArrayList<RsSqlCdataBean>()
+
+        try {
+            def file = new File(app.workspace(), bean.path())
+            if (!file.exists()) {
+                new RuntimeException("file is not exists!")
+            }
+
+            def list = new ArrayList<String>()
+
+            try {
+                def inputStream = new FileInputStream(file)
+
+                def reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"))
+
+                def _switch = true
+                while (_switch) {
+                    def content = reader.readLine()
+                    if (content.equals(null)) {
+                        _switch = false
+
+                    } else {
+                        list.add(content)
+                    }
+                }
+
+            } catch(Exception e) {
+                e.printStackTrace()
+            }
+
+            def persistentName =  "NONE"
+
+            //todo specify project name
+            def projectName = ""
+
+            def idx = 0
+            list.each {String text ->
+                def entry = new RsSqlCdataBean()
+
+                entry.authorAttr().setValue(bean.author())
+                entry.commitHmsAttr().setValue(bean.commitHms())
+                entry.commitYmdAttr().setValue(bean.commitYmd())
+                entry.extensionAttr().setValue(FilenameUtils.getExtension(bean.fileName()))
+                entry.fileNameAttr().setValue(bean.fileName())
+                entry.headRevisionAttr().setValue(new BigDecimal(bean.headRevision()))
+                entry.lineAttr().setValue(new BigDecimal(idx))
+                entry.textAttr().setValue(text)
+                entry.pathAttr().setValue(bean.path())
+                entry.revisionAttr().setValue(new BigDecimal(bean.revision()))
+                entry.persisterNameAttr().setValue(persistentName)
+
+                idx += 1
+                resultSets.add(entry)
+            }
+
+
+        } catch (IOException e) {
+            println("[IO-ERROR]" + bean.path())
+
+        } catch (Exception e) {
+            e.printStackTrace()
+            println("[RUNTIME-ERROR]" + bean.path())
+
+        }
+
+        return resultSets
+    }
 }

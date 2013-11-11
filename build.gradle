@@ -78,6 +78,12 @@ task SqlCdataRunner (type: JavaExec) {
     args = project.runargs.split(',').toList()
 }
 
+task SqlCdataExpRunner (type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "com.jellyfish85.srcParser.runner.SqlCdataExpRunner"
+    args = project.runargs.split(',').toList()
+}
+
 task CleanSqlTextRunner (type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = "com.jellyfish85.srcParser.runner.CleanSqlTextRunner"
