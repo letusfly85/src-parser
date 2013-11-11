@@ -148,7 +148,7 @@ class SqlFwEraser {
     public static Boolean isOperator(String line) {
         def flg = false
 
-        if (/([\+])+/ =~ line) {
+        if (/([\+]+)/ =~ line) {
             flg = true
 
         } else if (/([\s]+)-\s/ =~ line) {
