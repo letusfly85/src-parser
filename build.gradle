@@ -90,6 +90,12 @@ task CleanSqlTextRunner (type: JavaExec) {
     args = project.runargs.split(',').toList()
 }
 
+task CleanSqlTextExpRunner (type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "com.jellyfish85.srcParser.runner.CleanSqlTextExpRunner"
+    args = project.runargs.split(',').toList()
+}
+
 /*
 task execScala (type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath

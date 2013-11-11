@@ -1,8 +1,11 @@
 package com.jellyfish85.srcParser.runner
 
 import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSqlCdataBean
+import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSqlTextExpBean
 import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSqlCdataDao
 import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSqlTextDao
+import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSqlTextExpDao
+import com.jellyfish85.srcParser.eraser.SqlExpSplitter
 import com.jellyfish85.srcParser.eraser.SqlFwEraser
 import com.jellyfish85.srcParser.helper.SqlCdata2SqlTextHelper
 
@@ -13,12 +16,12 @@ class CleanSqlTextExpRunner {
         _context.databaseInitialize()
 
         def dao = new RsSqlCdataDao()
-        def register = new RsSqlTextDao()
+        def register = new RsSqlTextExpDao()
 
-        def eraser = new SqlFwEraser()
+        def splitter = new SqlExpSplitter()
 
 
-        def _targetList = dao.findSummary(_context.getConnection())
+        def _targetList = dao.findSummaryByExtension(_context.getConnection(), _context.app.sql())
         def targetList = dao.convert(_targetList)
 
         targetList.each {RsSqlCdataBean target ->
@@ -26,14 +29,16 @@ class CleanSqlTextExpRunner {
 
             def _list = dao.find(_context.getConnection(), target)
             def list  = dao.convert(_list)
-            def query = eraser.getErasedSqlText(list)
+            def sets = splitter.split(list)
 
-            def helper = new SqlCdata2SqlTextHelper()
-            def entries = helper.query2RsSqlTextBeanList(query, list[0])
-            register.delete(_context.getConnection(), entries[0])
-            register.insert(_context.getConnection(), entries)
+            if (sets.size() > 0) {
+                //def helper = new SqlCdata2SqlTextHelper()
+                //def entries = helper.query2RsSqlTextExpBeanList(sets, list[0])
+                register.delete(_context.getConnection(), sets[0])
+                register.insert(_context.getConnection(), sets)
 
-            _context.manager.jCommit()
+                _context.manager.jCommit()
+            }
         }
 
         /*

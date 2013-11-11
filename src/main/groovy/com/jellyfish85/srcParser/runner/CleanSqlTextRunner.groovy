@@ -19,7 +19,8 @@ class CleanSqlTextRunner {
         def eraser = new SqlFwEraser()
 
 
-        def _targetList = dao.findSummary(_context.getConnection())
+        def _targetList = dao.findSummaryByExtension(_context.getConnection(), _context.app.uql())
+        _targetList.addAll(dao.findSummaryByExtension(_context.getConnection(), _context.app.al()))
         def targetList = dao.convert(_targetList)
 
         targetList.each {RsSqlCdataBean target ->
