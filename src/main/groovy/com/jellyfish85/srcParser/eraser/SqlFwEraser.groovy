@@ -42,7 +42,7 @@ class SqlFwEraser {
         result = result.replaceAll(/:_a([a-z]{1})/,             " 1 = 1")
         result = result.replaceAll(/:_([A-Za-z\_]+)/,           ":variance")
 
-        result = result.replaceAll(/.*\/\*([\s|\t]+).*([\s|\t]+)\/\*.*/, "")
+        result = result.replaceAll(/\/\*([\s|\t]{1}).*([\s|\t]+)\/\*.*/, "")
         result = result.replaceAll(/(\/\*).*(\*\/)/, "")
         result = result.replaceAll(/([\s|\t]+)(--).*/, "")
 
