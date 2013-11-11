@@ -1,38 +1,23 @@
 package com.jellyfish85.srcParser.executor
 
-import org.apache.commons.io.FilenameUtils
-
 import com.jellyfish85.srcParser.utils.QueryBuilder
+import com.jellyfish85.dbaccessor.dao.src.mainte.tool.{RsSqlTablesExpDao, RsSqlTextExpDao}
 import com.jellyfish85.srcParser.parser.TableParser
+import com.jellyfish85.srcParser.converter.{ConvRsSqlTextExpBean2RsSqlTablesExpBean}
+import com.jellyfish85.dbaccessor.bean.src.mainte.tool.{RsSqlTablesExpBean, RsSqlTablesBean, RsSqlTextExpBean}
 
-import com.jellyfish85.dbaccessor.dao.src.mainte.tool.{RsSqlTablesDao, RsSqlTextDao}
-import com.jellyfish85.dbaccessor.bean.src.mainte.tool.{RsSqlTablesBean, RsSqlTextBean}
-import com.jellyfish85.srcParser.converter.ConvRsSqlTextBean2RsSqlTablesBean
-
-
-/**
- * == ParseTableAttribute ==
- *
- *
- *
- *@example
- *    gradle run -Prunargs=com.jellyfish85.srcParser.executor.ParseTableAttribute
- *
- * @author wada shunsuke
- *
- */
-class ParseTableAttribute extends ExecutorTrait with QueryBuilder[RsSqlTextBean] {
+class ParseExpTableAttribute extends ExecutorTrait with QueryBuilder[RsSqlTextExpBean] {
 
   def run(args: Array[String]) {
 
     databaseInitialize()
 
-    val dao:       RsSqlTextDao  = new RsSqlTextDao
-    val parser:    TableParser[RsSqlTextBean, RsSqlTablesBean]  =
-                                   new TableParser[RsSqlTextBean, RsSqlTablesBean]
-    val converter: ConvRsSqlTextBean2RsSqlTablesBean =
-                                   new ConvRsSqlTextBean2RsSqlTablesBean
-    def register: RsSqlTablesDao = new RsSqlTablesDao
+    val dao:       RsSqlTextExpDao  = new RsSqlTextExpDao
+    val parser:    TableParser[RsSqlTextExpBean, RsSqlTablesExpBean]   =
+                                      new TableParser[RsSqlTextExpBean, RsSqlTablesExpBean]
+    val converter: ConvRsSqlTextExpBean2RsSqlTablesExpBean =
+      new ConvRsSqlTextExpBean2RsSqlTablesExpBean
+    def register: RsSqlTablesExpDao = new RsSqlTablesExpDao
 
     /*
     val _bean: RsSqlTextBean = new RsSqlTextBean
@@ -56,17 +41,17 @@ class ParseTableAttribute extends ExecutorTrait with QueryBuilder[RsSqlTextBean]
     register.insert(db.conn, resultSets)
     */
 
-    val list: List[RsSqlTextBean] = dao.findSummary(db.conn)
-    list.foreach {bean: RsSqlTextBean =>
+    val list: List[RsSqlTextExpBean] = dao.findSummary(db.conn)
+    list.foreach {bean: RsSqlTextExpBean =>
 
       println("[TARGET]\t" + bean.pathAttr.value)
       try {
         val _list = dao.find(db.conn, bean)
 
         val sql: String = queryBuild(_list)
-        val entry: RsSqlTablesBean = converter.convert(_list.head)
+        val entry: RsSqlTablesExpBean = converter.convert(_list.head)
 
-        val resultSets: List[RsSqlTablesBean] = parser.getCrudRecursive(entry, 0, sql)
+        val resultSets: List[RsSqlTablesExpBean] = parser.getCrudRecursive(entry, 0, sql)
 
         register.delete(db.conn, entry)
         register.insert(db.conn, resultSets)

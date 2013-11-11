@@ -4,11 +4,11 @@ import br.com.porcelli.parser._
 
 import org.antlr.runtime.{CommonTokenStream, ANTLRStringStream}
 import org.antlr.runtime.tree.CommonTree
-import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSqlTablesBean
+import com.jellyfish85.dbaccessor.bean.src.mainte.tool.{RsSqlTablesBeanTrait, RsSqlTextBeanTrait}
 
 import java.math.BigDecimal
 
-class TableParser {
+class TableParser[A <: RsSqlTextBeanTrait, B <: RsSqlTablesBeanTrait] {
 
   /**
    * == getCommonTree ==
@@ -48,8 +48,8 @@ class TableParser {
    * @param sql
    * @return
    */
-  def getInitCrud(tree: CommonTree, entry: RsSqlTablesBean, sql: String): RsSqlTablesBean = {
-    val result: RsSqlTablesBean = entry
+  def getInitCrud(tree: CommonTree, entry: B, sql: String): B = {
+    val result: B = entry
 
     tree.getText match {
       case "SELECT_STATEMENT" =>
@@ -96,14 +96,14 @@ class TableParser {
    * @param sql
    * @return
    */
-  def getCrudRecursive(target: RsSqlTablesBean, level: Int, sql: String) :List[RsSqlTablesBean]= {
+  def getCrudRecursive(target: B, level: Int, sql: String) :List[B]= {
     //var entry = new RsSqlTablesBean()
-    var entry = target
+    var entry: B = target
 
     val tree = getCommonTree(sql)
     entry = getInitCrud(tree, entry, sql)
 
-    var list :List[RsSqlTablesBean] = List()
+    var list :List[B] = List()
     entry.crudTypeAttr.value match {
       case "SELECT" =>
         list :::= specifySelectSQLTable(tree, entry, level, sql)
@@ -123,7 +123,7 @@ class TableParser {
       case _ =>
     }
 
-    list.foreach {bean =>
+    list.foreach {bean: B =>
       bean.fileNameAttr.value      = target.fileNameAttr.value
       bean.persisterNameAttr.value = target.persisterNameAttr.value
       bean.callTypeAttr.value      = "SQL"
@@ -140,9 +140,9 @@ class TableParser {
    * @param tableAttribute
    * @return
    */
-  def specifyTable(tree: CommonTree, tableAttribute: RsSqlTablesBean, level: Int) :List[RsSqlTablesBean] = {
+  def specifyTable(tree: CommonTree, tableAttribute: B, level: Int) :List[B] = {
     //println("------" + tree.getText + "\t" + level.toString)
-    var tableAttributeList :List[RsSqlTablesBean] = List()
+    var tableAttributeList :List[B] = List()
 
     tree.getText match {
       case "ALIAS" =>
@@ -150,7 +150,7 @@ class TableParser {
 
       case "TABLEVIEW_NAME" =>
         //var tabAttr = tableAttribute
-        val tabAttr = new RsSqlTablesBean
+        val tabAttr: B = (new Object).asInstanceOf[B]
         tabAttr.pathAttr.setValue(tableAttribute.pathAttr.value)
         tabAttr.projectNameAttr.setValue(tableAttribute.projectNameAttr.value)
         tabAttr.headRevisionAttr.setValue(tableAttribute.headRevisionAttr.value)
@@ -167,7 +167,7 @@ class TableParser {
         tableAttributeList ::= tabAttr
 
       case "SELECT_MODE"    =>
-        val tabAttr = new RsSqlTablesBean
+        val tabAttr: B = (new Object).asInstanceOf[B]
         tabAttr.pathAttr.setValue(tableAttribute.pathAttr.value)
         tabAttr.projectNameAttr.setValue(tableAttribute.projectNameAttr.value)
         tabAttr.headRevisionAttr.setValue(tableAttribute.headRevisionAttr.value)
@@ -182,14 +182,14 @@ class TableParser {
         tabAttr.crudTypeAttr.value = "SELECT"
         tabAttr.callTypeAttr.value = "SQL"
 
-        var tabAttrList: List[RsSqlTablesBean] = List(tabAttr)
+        var tabAttrList: List[B] = List(tabAttr)
         for (i <- 0 until tree.getChildCount) {
           tabAttrList :::= specifyTable(tree.getChild(i).asInstanceOf[CommonTree], tableAttribute, level + 1)
         }
         return tabAttrList
 
       case _ =>
-        var tabAttrList: List[RsSqlTablesBean] = List()
+        var tabAttrList: List[B] = List()
         for (i <- 0 until tree.getChildCount) {
           tabAttrList :::= specifyTable(tree.getChild(i).asInstanceOf[CommonTree], tableAttribute, level + 1)
         }
@@ -206,10 +206,10 @@ class TableParser {
    * @param sqlAttribute
    * @return
    */
-  def specifySelectSQLTable(tree :CommonTree, sqlAttribute :RsSqlTablesBean,
-                            level: Int, sql: String) :List[RsSqlTablesBean] = {
+  def specifySelectSQLTable(tree :CommonTree, sqlAttribute :B,
+                            level: Int, sql: String) :List[B] = {
 
-    var tableAttributeList :List[RsSqlTablesBean] = List()
+    var tableAttributeList :List[B] = List()
 
     tree.getText match {
       case "TABLE_REF" =>
@@ -226,12 +226,12 @@ class TableParser {
             for (i <- 0 until children.size()) {
 
               val nextTree = children.get(i).asInstanceOf[CommonTree]
-              val tabAttr = sqlAttribute
+              val tabAttr: B = sqlAttribute
 
               tabAttr.fileNameAttr.value = sqlAttribute.fileNameAttr.value
               tabAttr.crudTypeAttr.value = sqlAttribute.crudTypeAttr.value
 
-              val tabAttrList = specifySelectSQLTable(nextTree, tabAttr, level, sql)
+              val tabAttrList: List[B] = specifySelectSQLTable(nextTree, tabAttr, level, sql)
               if (tabAttrList.size > 0) {
                 tableAttributeList :::= tabAttrList
               }
@@ -250,10 +250,10 @@ class TableParser {
    * @param sqlAttribute
    * @return
    */
-  def specifyDeleteSQLTable(tree :CommonTree, sqlAttribute :RsSqlTablesBean,
-                            level: Int, sql: String) :List[RsSqlTablesBean] = {
+  def specifyDeleteSQLTable(tree :CommonTree, sqlAttribute :B,
+                            level: Int, sql: String) :List[B] = {
 
-    val tableAttributeList :List[RsSqlTablesBean] = List()
+    val tableAttributeList :List[B] = List()
 
     tree.getText match {
       case "TABLE_REF" =>
@@ -269,7 +269,7 @@ class TableParser {
           case Some(children) =>
             for (i <- 0 to children.size() -1) {
               val nextTree = children.get(i).asInstanceOf[CommonTree]
-              val tabAttrList = specifyDeleteSQLTable(nextTree, sqlAttribute, level, sql)
+              val tabAttrList: List[B] = specifyDeleteSQLTable(nextTree, sqlAttribute, level, sql)
 
               if (tabAttrList.size > 0) {
                 return tabAttrList
@@ -288,10 +288,10 @@ class TableParser {
    * @param sqlAttribute
    * @return
    */
-  def specifyInsertSQLTable(tree :CommonTree, sqlAttribute :RsSqlTablesBean,
-                            level: Int, sql: String) :List[RsSqlTablesBean] = {
+  def specifyInsertSQLTable(tree :CommonTree, sqlAttribute :B,
+                            level: Int, sql: String) :List[B] = {
 
-    var tableAttributeList :List[RsSqlTablesBean] = List()
+    var tableAttributeList :List[B] = List()
 
     tree.getText match {
       case "TABLEVIEW_NAME" =>
@@ -299,7 +299,7 @@ class TableParser {
         tableAttributeList ::= sqlAttribute
 
       case "SELECT_STATEMENT" =>
-        val tabAttrList = specifyTable(tree.getChild(0).asInstanceOf[CommonTree], sqlAttribute, (level+1))
+        val tabAttrList: List[B] = specifyTable(tree.getChild(0).asInstanceOf[CommonTree], sqlAttribute, (level+1))
         return tabAttrList
 
       //todo specify insert all statement
@@ -314,7 +314,7 @@ class TableParser {
           case Some(children) =>
             for (i <- 0 until children.size()) {
               val nextTree = children.get(i).asInstanceOf[CommonTree]
-              val tabAttrList = specifyInsertSQLTable(nextTree, sqlAttribute, level, sql)
+              val tabAttrList: List[B] = specifyInsertSQLTable(nextTree, sqlAttribute, level, sql)
 
               if (tabAttrList.size >0) {
                 tableAttributeList :::= tabAttrList
@@ -332,10 +332,10 @@ class TableParser {
    * @param sqlAttribute
    * @return
    */
-  def specifyUpdateSQLTable(tree :CommonTree, sqlAttribute :RsSqlTablesBean,
-                            level: Int, sql: String) :List[RsSqlTablesBean] = {
+  def specifyUpdateSQLTable(tree :CommonTree, sqlAttribute :B,
+                            level: Int, sql: String) :List[B] = {
 
-    var tableAttributeList :List[RsSqlTablesBean] = List()
+    var tableAttributeList :List[B] = List()
 
     tree.getText match {
       case "TABLEVIEW_NAME" =>
@@ -343,7 +343,7 @@ class TableParser {
         tableAttributeList ::= sqlAttribute
 
       case "select" =>
-        val tabAttrList = specifyTable(tree.getChild(0).asInstanceOf[CommonTree], sqlAttribute, (level+1))
+        val tabAttrList: List[B] = specifyTable(tree.getChild(0).asInstanceOf[CommonTree], sqlAttribute, (level+1))
         tableAttributeList :::= tabAttrList
 
       case _ =>
@@ -353,7 +353,7 @@ class TableParser {
           case Some(children) =>
             for (i <- 0 until children.size()) {
               val nextTree = children.get(i).asInstanceOf[CommonTree]
-              val tabAttrList = specifyUpdateSQLTable(nextTree, sqlAttribute, level, sql)
+              val tabAttrList: List[B] = specifyUpdateSQLTable(nextTree, sqlAttribute, level, sql)
 
               if (tabAttrList.size > 0) {
                 tableAttributeList :::= tabAttrList
@@ -372,8 +372,8 @@ class TableParser {
    * @param sqlAttribute
    * @return
    */
-  def specifyMergeSQLTable(tree :CommonTree, sqlAttribute :RsSqlTablesBean,
-                           level: Int, sql: String) :RsSqlTablesBean = {
+  def specifyMergeSQLTable(tree :CommonTree, sqlAttribute :B,
+                           level: Int, sql: String) :B = {
 
     val nextTree = tree.getChildren
     if (nextTree.size() != 1) {  //TODO

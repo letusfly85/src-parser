@@ -32,8 +32,6 @@ class CleanSqlTextExpRunner {
             def sets = splitter.split(list)
 
             if (sets.size() > 0) {
-                //def helper = new SqlCdata2SqlTextHelper()
-                //def entries = helper.query2RsSqlTextExpBeanList(sets, list[0])
                 register.delete(_context.getConnection(), sets[0])
                 register.insert(_context.getConnection(), sets)
 
