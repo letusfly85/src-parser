@@ -18,6 +18,7 @@ class CleanSqlTextRunner {
 
         def eraser = new SqlFwEraser()
 
+
         def _targetList = dao.findSummary(_context.getConnection())
         def targetList = dao.convert(_targetList)
 
