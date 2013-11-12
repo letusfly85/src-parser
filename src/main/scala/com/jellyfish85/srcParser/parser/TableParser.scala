@@ -4,17 +4,25 @@ import br.com.porcelli.parser._
 
 import org.antlr.runtime.{CommonTokenStream, ANTLRStringStream}
 import org.antlr.runtime.tree.CommonTree
-import com.jellyfish85.dbaccessor.bean.src.mainte.tool.{RsSqlTablesBeanTrait, RsSqlTextBeanTrait}
+
+import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSqlTablesBeanTrait
 
 import java.math.BigDecimal
 
-class TableParser[A <: RsSqlTextBeanTrait, B <: RsSqlTablesBeanTrait] {
+/**
+ *
+ * @todo  refactor
+ * @param m
+ * @tparam A
+ */
+class TableParser[A <: RsSqlTablesBeanTrait](implicit m:ClassManifest[A]) {
 
   /**
    * == getCommonTree ==
    *
    * @param sql
    * @return
+   *
    */
   def getCommonTree(sql: String): CommonTree = {
 
@@ -48,8 +56,8 @@ class TableParser[A <: RsSqlTextBeanTrait, B <: RsSqlTablesBeanTrait] {
    * @param sql
    * @return
    */
-  def getInitCrud(tree: CommonTree, entry: B, sql: String): B = {
-    val result: B = entry
+  def getInitCrud(tree: CommonTree, entry: A, sql: String): A = {
+    val result: A = entry
 
     tree.getText match {
       case "SELECT_STATEMENT" =>
@@ -96,14 +104,13 @@ class TableParser[A <: RsSqlTextBeanTrait, B <: RsSqlTablesBeanTrait] {
    * @param sql
    * @return
    */
-  def getCrudRecursive(target: B, level: Int, sql: String) :List[B]= {
-    //var entry = new RsSqlTablesBean()
-    var entry: B = target
+  def getCrudRecursive(target: A, level: Int, sql: String) :List[A]= {
+    var entry: A = target
 
     val tree = getCommonTree(sql)
     entry = getInitCrud(tree, entry, sql)
 
-    var list :List[B] = List()
+    var list :List[A] = List()
     entry.crudTypeAttr.value match {
       case "SELECT" =>
         list :::= specifySelectSQLTable(tree, entry, level, sql)
@@ -123,7 +130,7 @@ class TableParser[A <: RsSqlTextBeanTrait, B <: RsSqlTablesBeanTrait] {
       case _ =>
     }
 
-    list.foreach {bean: B =>
+    list.foreach {bean: A =>
       bean.fileNameAttr.value      = target.fileNameAttr.value
       bean.persisterNameAttr.value = target.persisterNameAttr.value
       bean.callTypeAttr.value      = "SQL"
@@ -134,88 +141,91 @@ class TableParser[A <: RsSqlTextBeanTrait, B <: RsSqlTablesBeanTrait] {
 
 
   /**
-   * table名称とtableエイリアスを返却する
+   * search table name and its alias
    *
    * @param tree
-   * @param tableAttribute
+   * @param attr
    * @return
    */
-  def specifyTable(tree: CommonTree, tableAttribute: B, level: Int) :List[B] = {
+  def specifyTable(tree: CommonTree, attr: A, level: Int) :List[A] = {
     //println("------" + tree.getText + "\t" + level.toString)
-    var tableAttributeList :List[B] = List()
+    var attrList :List[A] = List()
 
     tree.getText match {
       case "ALIAS" =>
-        tableAttribute.tableAliasAttr.value = tree.getChild(0).getText
+        attr.tableAliasAttr.value = tree.getChild(0).getText
 
       case "TABLEVIEW_NAME" =>
-        //var tabAttr = tableAttribute
-        val tabAttr: B = (new Object).asInstanceOf[B]
-        tabAttr.pathAttr.setValue(tableAttribute.pathAttr.value)
-        tabAttr.projectNameAttr.setValue(tableAttribute.projectNameAttr.value)
-        tabAttr.headRevisionAttr.setValue(tableAttribute.headRevisionAttr.value)
-        tabAttr.revisionAttr.setValue(tableAttribute.revisionAttr.value)
+        val anyRef = classManifest[A].erasure
+        val newAttr: A = anyRef.newInstance.asInstanceOf[A]
 
-        tabAttr.tableNameAttr.value  = tree.getChild(0).getText
-        tabAttr.tableAliasAttr.value = tableAttribute.tableAliasAttr.value
-        tabAttr.depthAttr.value      = new BigDecimal(level)
+        newAttr.pathAttr.setValue(attr.pathAttr.value)
+        newAttr.projectNameAttr.setValue(attr.projectNameAttr.value)
+        newAttr.headRevisionAttr.setValue(attr.headRevisionAttr.value)
+        newAttr.revisionAttr.setValue(attr.revisionAttr.value)
 
-        tabAttr.fileNameAttr.value = tableAttribute.fileNameAttr.value
-        tabAttr.pathAttr.value     = tableAttribute.pathAttr.value
-        tabAttr.crudTypeAttr.value = "SELECT"
-        tabAttr.callTypeAttr.value = "SQL"
-        tableAttributeList ::= tabAttr
+        newAttr.tableNameAttr.value  = tree.getChild(0).getText
+        newAttr.tableAliasAttr.value = attr.tableAliasAttr.value
+        newAttr.depthAttr.value      = new BigDecimal(level)
+
+        newAttr.fileNameAttr.value = attr.fileNameAttr.value
+        newAttr.pathAttr.value     = attr.pathAttr.value
+        newAttr.crudTypeAttr.value = "SELECT"
+        newAttr.callTypeAttr.value = "SQL"
+        attrList ::= newAttr
 
       case "SELECT_MODE"    =>
-        val tabAttr: B = (new Object).asInstanceOf[B]
-        tabAttr.pathAttr.setValue(tableAttribute.pathAttr.value)
-        tabAttr.projectNameAttr.setValue(tableAttribute.projectNameAttr.value)
-        tabAttr.headRevisionAttr.setValue(tableAttribute.headRevisionAttr.value)
-        tabAttr.revisionAttr.setValue(tableAttribute.revisionAttr.value)
+        val anyRef = classManifest[A].erasure
+        val newAttr: A = anyRef.newInstance.asInstanceOf[A]
 
-        tabAttr.tableNameAttr.value  = "INLINE VIEW"
-        tabAttr.tableAliasAttr.value = tableAttribute.tableAliasAttr.value
-        tabAttr.depthAttr.value      = new BigDecimal(level)
+        newAttr.pathAttr.setValue(attr.pathAttr.value)
+        newAttr.projectNameAttr.setValue(attr.projectNameAttr.value)
+        newAttr.headRevisionAttr.setValue(attr.headRevisionAttr.value)
+        newAttr.revisionAttr.setValue(attr.revisionAttr.value)
 
-        tabAttr.fileNameAttr.value = tableAttribute.fileNameAttr.value
-        tabAttr.pathAttr.value     = tableAttribute.pathAttr.value
-        tabAttr.crudTypeAttr.value = "SELECT"
-        tabAttr.callTypeAttr.value = "SQL"
+        newAttr.tableNameAttr.value  = "INLINE VIEW"
+        newAttr.tableAliasAttr.value = attr.tableAliasAttr.value
+        newAttr.depthAttr.value      = new BigDecimal(level)
 
-        var tabAttrList: List[B] = List(tabAttr)
+        newAttr.fileNameAttr.value = attr.fileNameAttr.value
+        newAttr.pathAttr.value     = attr.pathAttr.value
+        newAttr.crudTypeAttr.value = "SELECT"
+        newAttr.callTypeAttr.value = "SQL"
+
+        var newAttrList: List[A] = List(newAttr)
         for (i <- 0 until tree.getChildCount) {
-          tabAttrList :::= specifyTable(tree.getChild(i).asInstanceOf[CommonTree], tableAttribute, level + 1)
+          newAttrList :::= specifyTable(tree.getChild(i).asInstanceOf[CommonTree], attr, level + 1)
         }
-        return tabAttrList
+        return newAttrList
 
       case _ =>
-        var tabAttrList: List[B] = List()
+        var newAttrList: List[A] = List()
         for (i <- 0 until tree.getChildCount) {
-          tabAttrList :::= specifyTable(tree.getChild(i).asInstanceOf[CommonTree], tableAttribute, level + 1)
+          newAttrList :::= specifyTable(tree.getChild(i).asInstanceOf[CommonTree], attr, level + 1)
         }
-        return tabAttrList
+        return newAttrList
     }
 
-    return tableAttributeList
+    return attrList
   }
 
   /**
    * search table name and its alias that select statement calls
    *
    * @param tree
-   * @param sqlAttribute
+   * @param attr
    * @return
    */
-  def specifySelectSQLTable(tree :CommonTree, sqlAttribute :B,
-                            level: Int, sql: String) :List[B] = {
+  def specifySelectSQLTable(tree :CommonTree, attr :A,
+                            level: Int, sql: String) :List[A] = {
 
-    var tableAttributeList :List[B] = List()
+    var attrList :List[A] = List()
 
     tree.getText match {
       case "TABLE_REF" =>
-        val _list = specifyTable(tree.getChild(0).asInstanceOf[CommonTree], sqlAttribute, (level+1))
+        val _list = specifyTable(tree.getChild(0).asInstanceOf[CommonTree], attr, (level+1))
 
-        tableAttributeList :::= _list
+        attrList :::= _list
 
       case _ =>
         Option(tree.getChildren) match {
@@ -226,167 +236,167 @@ class TableParser[A <: RsSqlTextBeanTrait, B <: RsSqlTablesBeanTrait] {
             for (i <- 0 until children.size()) {
 
               val nextTree = children.get(i).asInstanceOf[CommonTree]
-              val tabAttr: B = sqlAttribute
+              val newAttr: A = attr
 
-              tabAttr.fileNameAttr.value = sqlAttribute.fileNameAttr.value
-              tabAttr.crudTypeAttr.value = sqlAttribute.crudTypeAttr.value
+              newAttr.fileNameAttr.value = attr.fileNameAttr.value
+              newAttr.crudTypeAttr.value = attr.crudTypeAttr.value
 
-              val tabAttrList: List[B] = specifySelectSQLTable(nextTree, tabAttr, level, sql)
-              if (tabAttrList.size > 0) {
-                tableAttributeList :::= tabAttrList
+              val newAttrList: List[A] = specifySelectSQLTable(nextTree, newAttr, level, sql)
+              if (newAttrList.size > 0) {
+                attrList :::= newAttrList
               }
             }
 
         }
     }
 
-    tableAttributeList
+    attrList
   }
 
   /**
    * search table name and its alias that delete statement call
    *
    * @param tree
-   * @param sqlAttribute
+   * @param attr
    * @return
    */
-  def specifyDeleteSQLTable(tree :CommonTree, sqlAttribute :B,
-                            level: Int, sql: String) :List[B] = {
+  def specifyDeleteSQLTable(tree :CommonTree, attr :A,
+                            level: Int, sql: String) :List[A] = {
 
-    val tableAttributeList :List[B] = List()
+    val attrList :List[A] = List()
 
     tree.getText match {
       case "TABLE_REF" =>
-        val tabAttrList = specifyTable(tree.getChild(0).asInstanceOf[CommonTree], sqlAttribute, (level+1))
+        val newAttrList = specifyTable(tree.getChild(0).asInstanceOf[CommonTree], attr, (level+1))
 
-        return tabAttrList
+        return newAttrList
 
       case _ =>
         Option(tree.getChildren) match {
           case None =>
-            return (sqlAttribute :: tableAttributeList)
+            return (attr :: attrList)
 
           case Some(children) =>
             for (i <- 0 to children.size() -1) {
               val nextTree = children.get(i).asInstanceOf[CommonTree]
-              val tabAttrList: List[B] = specifyDeleteSQLTable(nextTree, sqlAttribute, level, sql)
+              val newAttrList: List[A] = specifyDeleteSQLTable(nextTree, attr, level, sql)
 
-              if (tabAttrList.size > 0) {
-                return tabAttrList
+              if (newAttrList.size > 0) {
+                return newAttrList
               }
             }
         }
     }
 
-    tableAttributeList
+    attrList
   }
 
   /**
    * search table name and its alias that insert statement call
    *
    * @param tree
-   * @param sqlAttribute
+   * @param attr
    * @return
    */
-  def specifyInsertSQLTable(tree :CommonTree, sqlAttribute :B,
-                            level: Int, sql: String) :List[B] = {
+  def specifyInsertSQLTable(tree :CommonTree, attr :A,
+                            level: Int, sql: String) :List[A] = {
 
-    var tableAttributeList :List[B] = List()
+    var attrList :List[A] = List()
 
     tree.getText match {
       case "TABLEVIEW_NAME" =>
-        sqlAttribute.tableNameAttr.value = tree.getChild(0).getText
-        tableAttributeList ::= sqlAttribute
+        attr.tableNameAttr.value = tree.getChild(0).getText
+        attrList ::= attr
 
       case "SELECT_STATEMENT" =>
-        val tabAttrList: List[B] = specifyTable(tree.getChild(0).asInstanceOf[CommonTree], sqlAttribute, (level+1))
-        return tabAttrList
+        val newAttrList: List[A] = specifyTable(tree.getChild(0).asInstanceOf[CommonTree], attr, (level+1))
+        return newAttrList
 
       //todo specify insert all statement
       case "MULTI_TABLE_MODE" =>
-        sqlAttribute.tableAliasAttr.value  = "INSERT ALL"
-        return (sqlAttribute :: tableAttributeList)
+        attr.tableAliasAttr.value  = "INSERT ALL"
+        return (attr :: attrList)
 
       case _ =>
         Option(tree.getChildren) match {
           case None =>
-            return tableAttributeList
+            return attrList
           case Some(children) =>
             for (i <- 0 until children.size()) {
               val nextTree = children.get(i).asInstanceOf[CommonTree]
-              val tabAttrList: List[B] = specifyInsertSQLTable(nextTree, sqlAttribute, level, sql)
+              val newAttrList: List[A] = specifyInsertSQLTable(nextTree, attr, level, sql)
 
-              if (tabAttrList.size >0) {
-                tableAttributeList :::= tabAttrList
+              if (newAttrList.size >0) {
+                attrList :::= newAttrList
               }
             }
         }
     }
-    tableAttributeList
+    attrList
   }
 
   /**
    * search table name and its alias that update statement call
    *
    * @param tree
-   * @param sqlAttribute
+   * @param attr
    * @return
    */
-  def specifyUpdateSQLTable(tree :CommonTree, sqlAttribute :B,
-                            level: Int, sql: String) :List[B] = {
+  def specifyUpdateSQLTable(tree :CommonTree, attr :A,
+                            level: Int, sql: String) :List[A] = {
 
-    var tableAttributeList :List[B] = List()
+    var attrList :List[A] = List()
 
     tree.getText match {
       case "TABLEVIEW_NAME" =>
-        sqlAttribute.tableNameAttr.value = tree.getChild(0).getText
-        tableAttributeList ::= sqlAttribute
+        attr.tableNameAttr.value = tree.getChild(0).getText
+        attrList ::= attr
 
       case "select" =>
-        val tabAttrList: List[B] = specifyTable(tree.getChild(0).asInstanceOf[CommonTree], sqlAttribute, (level+1))
-        tableAttributeList :::= tabAttrList
+        val tabAttrList: List[A] = specifyTable(tree.getChild(0).asInstanceOf[CommonTree], attr, (level+1))
+        attrList :::= tabAttrList
 
       case _ =>
         Option(tree.getChildren) match {
           case None =>
-            return tableAttributeList
+            return attrList
           case Some(children) =>
             for (i <- 0 until children.size()) {
               val nextTree = children.get(i).asInstanceOf[CommonTree]
-              val tabAttrList: List[B] = specifyUpdateSQLTable(nextTree, sqlAttribute, level, sql)
+              val newAttrList: List[A] = specifyUpdateSQLTable(nextTree, attr, level, sql)
 
-              if (tabAttrList.size > 0) {
-                tableAttributeList :::= tabAttrList
+              if (newAttrList.size > 0) {
+                attrList :::= newAttrList
               }
             }
         }
     }
 
-    tableAttributeList
+    attrList
   }
 
   /**
    * search table name and its alias that merge statement call
    *
    * @param tree
-   * @param sqlAttribute
+   * @param attr
    * @return
    */
-  def specifyMergeSQLTable(tree :CommonTree, sqlAttribute :B,
-                           level: Int, sql: String) :B = {
+  def specifyMergeSQLTable(tree :CommonTree, attr :A,
+                           level: Int, sql: String) :A = {
 
     val nextTree = tree.getChildren
     if (nextTree.size() != 1) {  //TODO
-      sqlAttribute.tableAliasAttr.value = tree.getChild(0).getChild(0).toString
-      sqlAttribute.tableNameAttr.value  = tree.getChild(1).getChild(0).toString
-      sqlAttribute.depthAttr.value      = new BigDecimal(level)
+      attr.tableAliasAttr.value = tree.getChild(0).getChild(0).toString
+      attr.tableNameAttr.value  = tree.getChild(1).getChild(0).toString
+      attr.depthAttr.value      = new BigDecimal(level)
 
     } else {
-      sqlAttribute.tableAliasAttr.value = "NONE"
-      sqlAttribute.tableNameAttr.value  = tree.getChild(0).getChild(0).toString
-      sqlAttribute.depthAttr.value      = new BigDecimal(level)
+      attr.tableAliasAttr.value = "NONE"
+      attr.tableNameAttr.value  = tree.getChild(0).getChild(0).toString
+      attr.depthAttr.value      = new BigDecimal(level)
     }
 
-    sqlAttribute
+    attr
   }
 }

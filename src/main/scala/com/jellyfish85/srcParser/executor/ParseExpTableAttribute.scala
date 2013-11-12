@@ -4,8 +4,19 @@ import com.jellyfish85.srcParser.utils.QueryBuilder
 import com.jellyfish85.dbaccessor.dao.src.mainte.tool.{RsSqlTablesExpDao, RsSqlTextExpDao}
 import com.jellyfish85.srcParser.parser.TableParser
 import com.jellyfish85.srcParser.converter.{ConvRsSqlTextExpBean2RsSqlTablesExpBean}
-import com.jellyfish85.dbaccessor.bean.src.mainte.tool.{RsSqlTablesExpBean, RsSqlTablesBean, RsSqlTextExpBean}
+import com.jellyfish85.dbaccessor.bean.src.mainte.tool.{RsSqlTablesExpBean, RsSqlTextExpBean}
 
+/**
+ * == ParseTableAttribute ==
+ *
+ *
+ *
+ *@example
+ *    gradle run -Prunargs=com.jellyfish85.srcParser.executor.ParseExpTableAttribute
+ *
+ * @author wada shunsuke
+ *
+ */
 class ParseExpTableAttribute extends ExecutorTrait with QueryBuilder[RsSqlTextExpBean] {
 
   def run(args: Array[String]) {
@@ -13,8 +24,8 @@ class ParseExpTableAttribute extends ExecutorTrait with QueryBuilder[RsSqlTextEx
     databaseInitialize()
 
     val dao:       RsSqlTextExpDao  = new RsSqlTextExpDao
-    val parser:    TableParser[RsSqlTextExpBean, RsSqlTablesExpBean]   =
-                                      new TableParser[RsSqlTextExpBean, RsSqlTablesExpBean]
+    val parser:    TableParser[RsSqlTablesExpBean]   =
+                                      new TableParser[RsSqlTablesExpBean]
     val converter: ConvRsSqlTextExpBean2RsSqlTablesExpBean =
       new ConvRsSqlTextExpBean2RsSqlTablesExpBean
     def register: RsSqlTablesExpDao = new RsSqlTablesExpDao
@@ -41,6 +52,7 @@ class ParseExpTableAttribute extends ExecutorTrait with QueryBuilder[RsSqlTextEx
     register.insert(db.conn, resultSets)
     */
 
+    register.truncate(db.conn)
     val list: List[RsSqlTextExpBean] = dao.findSummary(db.conn)
     list.foreach {bean: RsSqlTextExpBean =>
 
@@ -52,6 +64,7 @@ class ParseExpTableAttribute extends ExecutorTrait with QueryBuilder[RsSqlTextEx
         val entry: RsSqlTablesExpBean = converter.convert(_list.head)
 
         val resultSets: List[RsSqlTablesExpBean] = parser.getCrudRecursive(entry, 0, sql)
+        resultSets.map{bean: RsSqlTablesExpBean => bean.subLineAttr.setValue(entry.subLineAttr.value)}
 
         register.delete(db.conn, entry)
         register.insert(db.conn, resultSets)
@@ -61,7 +74,7 @@ class ParseExpTableAttribute extends ExecutorTrait with QueryBuilder[RsSqlTextEx
       } catch {
         case e: Exception =>
           db.jRollback
-          println("[ERROR]\t" + bean.persisterNameAttr.value + "\t" + bean.pathAttr.value)
+          println("[ERROR]\t" + bean.subLineAttr.value.toString + "\t" + bean.pathAttr.value)
           e.printStackTrace()
       }
     }

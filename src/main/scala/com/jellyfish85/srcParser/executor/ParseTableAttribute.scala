@@ -28,8 +28,8 @@ class ParseTableAttribute extends ExecutorTrait with QueryBuilder[RsSqlTextBean]
     databaseInitialize()
 
     val dao:       RsSqlTextDao  = new RsSqlTextDao
-    val parser:    TableParser[RsSqlTextBean, RsSqlTablesBean]  =
-                                   new TableParser[RsSqlTextBean, RsSqlTablesBean]
+    val parser:    TableParser[RsSqlTablesBean]  =
+                                   new TableParser[RsSqlTablesBean]
     val converter: ConvRsSqlTextBean2RsSqlTablesBean =
                                    new ConvRsSqlTextBean2RsSqlTablesBean
     def register: RsSqlTablesDao = new RsSqlTablesDao
