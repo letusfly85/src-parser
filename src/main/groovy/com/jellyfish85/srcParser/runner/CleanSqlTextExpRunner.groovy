@@ -1,13 +1,9 @@
 package com.jellyfish85.srcParser.runner
 
 import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSqlCdataBean
-import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSqlTextExpBean
 import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSqlCdataDao
-import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSqlTextDao
 import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSqlTextExpDao
 import com.jellyfish85.srcParser.eraser.SqlExpSplitter
-import com.jellyfish85.srcParser.eraser.SqlFwEraser
-import com.jellyfish85.srcParser.helper.SqlCdata2SqlTextHelper
 
 class CleanSqlTextExpRunner {
 
