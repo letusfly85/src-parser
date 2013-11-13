@@ -11,7 +11,7 @@ import java.math.BigDecimal
 
 /**
  *
- * @todo  refactor
+ * @todo  1.refactor, 2. add subversion attributes to bean
  * @param m
  * @tparam A
  */
@@ -399,4 +399,65 @@ class TableParser[A <: RsSqlTablesBeanTrait](implicit m:ClassManifest[A]) {
 
     attr
   }
+
+  def simpleWalk(tree: CommonTree) {
+    println(tree.getText)
+
+    val children = tree.getChildren
+    if (children != null && children.size() > 0){
+      for (i <- 0 until children.size()) {
+        simpleWalk(children.get(i).asInstanceOf[CommonTree])
+      }
+    }
+  }
+
+  /**
+   * == isTruncateSql ==
+   *
+   *
+   * @param sql
+   * @return
+   */
+  def isTruncateSql(sql: String): Boolean = {
+    val firstLine: String = sql.split("\n").head
+    if (firstLine.toUpperCase().matches(".*(TRUNCATE).*")) {
+      return true
+
+    } else {
+      return false
+    }
+  }
+
+  /**
+   * == specifyTruncateSQLTable ==
+   *
+   *
+   * @param queryFirstLine
+   * @param attr
+   * @return
+   */
+  def specifyTruncateSQLTable(queryFirstLine: String, attr :A) :A = {
+    val tableName: String = queryFirstLine.toUpperCase().
+      replaceAll("""([\s|\t]+)(TRUNCATE)([\s|\t]+)(TABLE)([\s|\t]+)""", "")
+
+    val anyRef = classManifest[A].erasure
+    val newAttr: A = anyRef.newInstance.asInstanceOf[A]
+
+    newAttr.pathAttr.setValue(attr.pathAttr.value)
+    newAttr.fileNameAttr.setValue(attr.fileNameAttr.value)
+    newAttr.projectNameAttr.setValue(attr.projectNameAttr.value)
+    newAttr.headRevisionAttr.setValue(attr.headRevisionAttr.value)
+    newAttr.revisionAttr.setValue(attr.revisionAttr.value)
+    newAttr.extensionAttr.setValue(attr.extensionAttr.value)
+    newAttr.authorAttr.setValue(attr.authorAttr.value)
+    newAttr.commitYmdAttr.setValue(attr.commitYmdAttr.value)
+    newAttr.commitHmsAttr.setValue(attr.commitHmsAttr.value)
+    newAttr.depthAttr.setValue(new BigDecimal(0))
+    newAttr.tableNameAttr.setValue(tableName)
+    newAttr.crudTypeAttr.setValue("TRUNCATE")
+    newAttr.callTypeAttr.setValue("SQL")
+
+    newAttr
+  }
+
 }

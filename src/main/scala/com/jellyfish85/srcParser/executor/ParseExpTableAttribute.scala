@@ -5,6 +5,9 @@ import com.jellyfish85.dbaccessor.dao.src.mainte.tool.{RsSqlTablesExpDao, RsSqlT
 import com.jellyfish85.srcParser.parser.TableParser
 import com.jellyfish85.srcParser.converter.{ConvRsSqlTextExpBean2RsSqlTablesExpBean}
 import com.jellyfish85.dbaccessor.bean.src.mainte.tool.{RsSqlTablesExpBean, RsSqlTextExpBean}
+import org.apache.commons.io.FilenameUtils
+
+import java.math.BigDecimal
 
 /**
  * == ParseTableAttribute ==
@@ -31,22 +34,27 @@ class ParseExpTableAttribute extends ExecutorTrait with QueryBuilder[RsSqlTextEx
     def register: RsSqlTablesExpDao = new RsSqlTablesExpDao
 
     /*
-    val _bean: RsSqlTextBean = new RsSqlTextBean
+    val _bean: RsSqlTextExpBean = new RsSqlTextExpBean
     _bean.pathAttr.value          = args(0)
+    _bean.subLineAttr.value       = new BigDecimal(1)
     _bean.fileNameAttr.value      = FilenameUtils.getName(args(0))
     _bean.persisterNameAttr.value = args(1)
 
-    val list: List[RsSqlTextBean]  = dao.find(db.conn, _bean)
-    val sql:  String = queryBuild(list)
-
-
-    val entry = new RsSqlTablesBean
+    val list: List[RsSqlTextExpBean]  = dao.find(db.conn, _bean)
+    val entry = new RsSqlTablesExpBean
     entry.fileNameAttr.value      = _bean.fileNameAttr.value
     entry.pathAttr.value          = _bean.pathAttr.value
     entry.persisterNameAttr.value = _bean.persisterNameAttr.value
 
-    val resultSets: List[RsSqlTablesBean] = parser.getCrudRecursive(entry, 0, sql)
+    val sql:  String = queryBuild(list)
 
+    var resultSets: List[RsSqlTablesExpBean] = List()
+    if (parser.isTruncateSql(sql)) {
+      resultSets ::= parser.specifyTruncateSQLTable(sql.split("\n").head, entry)
+
+    } else {
+      resultSets = parser.getCrudRecursive(entry, 0, sql)
+    }
 
     register.delete(db.conn, entry)
     register.insert(db.conn, resultSets)
@@ -63,7 +71,15 @@ class ParseExpTableAttribute extends ExecutorTrait with QueryBuilder[RsSqlTextEx
         val sql: String = queryBuild(_list)
         val entry: RsSqlTablesExpBean = converter.convert(_list.head)
 
-        val resultSets: List[RsSqlTablesExpBean] = parser.getCrudRecursive(entry, 0, sql)
+        var resultSets: List[RsSqlTablesExpBean] = List()
+
+        if (parser.isTruncateSql(sql)) {
+          resultSets ::= parser.specifyTruncateSQLTable(sql.split("\n").head, entry)
+
+        } else {
+          resultSets =  parser.getCrudRecursive(entry, 0, sql)
+        }
+
         resultSets.map{bean: RsSqlTablesExpBean => bean.subLineAttr.setValue(entry.subLineAttr.value)}
 
         register.delete(db.conn, entry)
