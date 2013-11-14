@@ -2,8 +2,9 @@ package com.jellyfish85.srcParser.eraser
 
 import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSqlCdataBean
 import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSqlTextExpBean
+import com.jellyfish85.srcParser.helper.SqlRegexHelper
 
-class SqlExpSplitter extends SqlRegexUtils  {
+class SqlExpSplitter extends SqlRegexHelper  {
 
     public ArrayList<RsSqlTextExpBean> split(ArrayList<RsSqlCdataBean> list) {
         def resultSets = new ArrayList<RsSqlTextExpBean>()

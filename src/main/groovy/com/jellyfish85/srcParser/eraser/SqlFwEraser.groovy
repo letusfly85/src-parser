@@ -2,8 +2,9 @@ package com.jellyfish85.srcParser.eraser
 
 import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSqlCdataBean
 import com.jellyfish85.srcParser.bean.SqlText
+import com.jellyfish85.srcParser.helper.SqlRegexHelper
 
-class SqlFwEraser extends SqlRegexUtils {
+class SqlFwEraser extends SqlRegexHelper {
 
     public String getErasedSqlText(ArrayList<RsSqlCdataBean> list) {
         def result = ""

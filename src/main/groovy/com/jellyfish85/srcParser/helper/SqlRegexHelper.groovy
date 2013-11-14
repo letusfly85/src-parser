@@ -1,6 +1,6 @@
-package com.jellyfish85.srcParser.eraser
+package com.jellyfish85.srcParser.helper
 
-class SqlRegexUtils {
+class SqlRegexHelper {
 
     /**
      * == isOperator ==
