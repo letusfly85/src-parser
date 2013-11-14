@@ -3,24 +3,32 @@ package com.jellyfish85.srcParser.eraser
 import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSqlCdataBean
 import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSqlTextExpBean
 
-class SqlExpSplitter {
+class SqlExpSplitter extends SqlRegexUtils  {
 
     public ArrayList<RsSqlTextExpBean> split(ArrayList<RsSqlCdataBean> list) {
         def resultSets = new ArrayList<RsSqlTextExpBean>()
 
-        def _switch = false
-        def _scratch = false
+        def _switch   = false
+        def _scratch  = false
+        def _mergeOpe = false
+
         def num = 0
         def idx = 0
         list.each {RsSqlCdataBean bean ->
           def text = bean.textAttr().value()
 
           if (text.toUpperCase() =~ /.*([\s|\t]+)INSERT([\s|\t]+).*/ ||
-              text.toUpperCase() =~ /.*([\s|\t]+)MERGE([\s|\t]+).*/ ||
+              text.toUpperCase() =~ /.*([\s|\t]+)MERGE([\s|\t]+).*/  ||
               text.toUpperCase() =~ /.*([\s|\t]+)TRUNCATE([\s|\t]+).*/) {
 
-              _switch  = true
-              _scratch = true
+              if (isMergeOpeMatched(text)) {
+                  _mergeOpe = true
+              }
+
+              if (!_mergeOpe) {
+                _switch  = true
+                _scratch = true
+              }
               num += 1
               idx = 0
 

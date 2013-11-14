@@ -3,7 +3,7 @@ package com.jellyfish85.srcParser.eraser
 import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSqlCdataBean
 import com.jellyfish85.srcParser.bean.SqlText
 
-class SqlFwEraser {
+class SqlFwEraser extends SqlRegexUtils {
 
     public String getErasedSqlText(ArrayList<RsSqlCdataBean> list) {
         def result = ""
@@ -124,7 +124,6 @@ class SqlFwEraser {
                         !isOperator(secondSqlText.line())
                     ) {
 
-                        //println((String)secondSqlText.whereOpeCounter() + "\tAND\t" + secondSqlText.line() + "\n")
                         if (secondSqlText.line() != null && secondSqlText.line() != "") {
                             result += "\tAND\t" + secondSqlText.line() + "\n"
                         }
@@ -146,49 +145,4 @@ class SqlFwEraser {
 
         return result
     }
-
-    /**
-     * == isOperator ==
-     *
-     *
-     *
-     * @param line
-     * @return
-     *
-     */
-    public static Boolean isOperator(String line) {
-        def flg = false
-
-        //if (line.matches("\\+")) {
-        if (line.toUpperCase() =~ /([\\+]+)/) {
-            flg = true
-
-        } else if (line.toUpperCase() =~  /([\s]+)-\s/) {
-            flg = true
-
-        } else if (line.toUpperCase() =~ /([\s|\t]+)(WHEN|THEN|ELSE|END|\(|\))([\s+])/) {
-            flg = true
-
-        } else if (line.toUpperCase() =~ /([\s|\t]+)(WHEN|THEN|ELSE|END|\(|\))$/) {
-            flg = true
-
-        } else if (line.toUpperCase() =~ /([\s]+)-\t/) {
-            flg = true
-
-
-        } else if (line.toUpperCase() =~ /([\s]+)--/) {
-            flg = true
-
-        } else if (line.toUpperCase() =~ /^([\s|\t]+)\|\|/) {
-            flg = true
-
-        } else if (line.toUpperCase() =~ /\|\|([\s|\t]+)$/) {
-            flg = true
-
-        } else {
-        }
-
-        return flg
-    }
-
 }
