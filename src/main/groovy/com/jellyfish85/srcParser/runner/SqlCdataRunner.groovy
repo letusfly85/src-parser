@@ -7,6 +7,13 @@ import com.jellyfish85.srcParser.parser.SqlCdataParser
 import com.jellyfish85.srcParser.downloader.DownloadSource2Workspace
 import com.jellyfish85.svnaccessor.bean.SVNRequestBean
 
+/**
+ * == SqlCdataRunner ==
+ *
+ * gather sql text from xml DSL sources.
+ *
+ * @todo modify for DTD
+ */
 class SqlCdataRunner {
 
    public static void main(String[] args) {
@@ -23,6 +30,15 @@ class SqlCdataRunner {
 
        def converter = new ConvRsSvnSrcInfoBean2SVNRequestBean()
        def requestList = dao.convert(converter.convert(list))
+
+       //todo add some modules which are called in xml's DTD scope
+       /*
+        * image
+        *
+        * requestList.add(bean_dtd_01)
+        * requestList.add(bean_dtd_02)
+        *
+        */
 
        def dl     = new DownloadSource2Workspace()
        dl.downLoadAll(app, requestList)
