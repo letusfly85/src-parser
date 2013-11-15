@@ -28,7 +28,6 @@ class SqlExpSplitter extends SqlRegexHelper  {
 
               if (!_mergeOpe) {
                 _switch  = true
-                _scratch = true
               }
               num += 1
               idx = 0

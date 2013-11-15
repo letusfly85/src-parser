@@ -53,10 +53,10 @@ class SqlRegexHelper {
      */
     public static Boolean isMergeOpeMatched(String line) {
 
-        if (line.toUpperCase() =~ /([\s|\t]+)(WHEN)([\s|\t])(MATCHED)/) {
+        if (line.toUpperCase() =~ /([\s|\t]+)(WHEN)([\s|\t]+)(MATCHED)/) {
             return true
 
-        } else if (line.toUpperCase() =~ /([\s|\t]+)(WHEN)([\s|\t])(NOT)([\s|\t])(MATCHED)/) {
+        } else if (line.toUpperCase() =~ /([\s|\t]+)(WHEN)([\s|\t]+)(NOT)([\s|\t]+)(MATCHED)/) {
             return true
 
         } else {
