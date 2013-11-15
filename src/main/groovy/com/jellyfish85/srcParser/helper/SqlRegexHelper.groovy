@@ -56,6 +56,9 @@ class SqlRegexHelper {
         if (line.toUpperCase() =~ /([\s|\t]+)(WHEN)([\s|\t])(MATCHED)/) {
             return true
 
+        } else if (line.toUpperCase() =~ /([\s|\t]+)(WHEN)([\s|\t])(NOT)([\s|\t])(MATCHED)/) {
+            return true
+
         } else {
             return false
         }
