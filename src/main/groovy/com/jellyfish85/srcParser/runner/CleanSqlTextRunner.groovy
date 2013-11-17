@@ -5,7 +5,6 @@ import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSqlCdataDao
 import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSqlTextDao
 import com.jellyfish85.srcParser.eraser.SqlFwEraser
 import com.jellyfish85.srcParser.helper.SqlCdata2SqlTextHelper
-import org.apache.commons.io.FilenameUtils
 
 class CleanSqlTextRunner {
 
