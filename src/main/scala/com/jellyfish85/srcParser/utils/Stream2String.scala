@@ -31,7 +31,13 @@ trait Stream2String {
     } catch {
       case e: NullPointerException =>
         e.printStackTrace()
+
+    } finally {
+      if (inputStream != null) {
+        inputStream.close()
+      }
     }
+
 
     query
   }
