@@ -18,19 +18,19 @@ class SqlExpSplitter extends SqlRegexHelper  {
         list.each {RsSqlCdataBean bean ->
           def text = bean.textAttr().value()
 
+          if (isMergeOpeMatched(text)) {
+              _mergeOpe = true
+          }
+
           if (text.toUpperCase() =~ /.*([\s|\t]+)INSERT([\s|\t]+).*/ ||
               text.toUpperCase() =~ /.*([\s|\t]+)MERGE([\s|\t]+).*/  ||
               text.toUpperCase() =~ /.*([\s|\t]+)TRUNCATE([\s|\t]+).*/) {
 
-              if (isMergeOpeMatched(text)) {
-                  _mergeOpe = true
-              }
-
               if (!_mergeOpe) {
                 _switch  = true
+                num += 1
+                idx = 0
               }
-              num += 1
-              idx = 0
 
           } else if (_switch && text =~ /.*;.*/) {
               _switch  = false

@@ -22,7 +22,7 @@ class SqlRegexHelperTest {
      */
     @Test
     public void isNotWhenScopeMatched() {
-        def str = "WHEN NOT MATCHED THEN"
+        def str = "\t\t\t\tWHEN NOT MATCHED THEN"
         assertTrue(helper.isMergeOpeMatched(str))
     }
 

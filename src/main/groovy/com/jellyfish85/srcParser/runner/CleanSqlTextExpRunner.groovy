@@ -4,6 +4,8 @@ import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSqlCdataBean
 import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSqlCdataDao
 import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSqlTextExpDao
 import com.jellyfish85.srcParser.eraser.SqlExpSplitter
+import com.jellyfish85.srcParser.helper.SqlCdata2SqlTextHelper
+import org.apache.commons.io.FilenameUtils
 
 class CleanSqlTextExpRunner {
 
@@ -15,7 +17,6 @@ class CleanSqlTextExpRunner {
         def register = new RsSqlTextExpDao()
 
         def splitter = new SqlExpSplitter()
-
 
         def _targetList = dao.findSummaryByExtension(_context.getConnection(), _context.app.sql())
         def targetList = dao.convert(_targetList)
@@ -42,14 +43,14 @@ class CleanSqlTextExpRunner {
         bean.persisterNameAttr().setValue(args[1])
         bean.fileNameAttr().setValue(FilenameUtils.getName(args[0]))
         def list = dao.find(_context.getConnection(), bean)
-        def query = eraser.getErasedSqlText(dao.convert(list))
+        def sets = splitter.split(dao.convert(list))
 
-        println(query)
+        //println(query)
 
         def helper = new SqlCdata2SqlTextHelper()
-        def entries = helper.query2RsSqlTextBeanList(query, bean)
-        register.delete(_context.getConnection(), entries[0])
-        register.insert(_context.getConnection(), entries)
+        //def entries = helper.query2RsSqlTextExpBeanList(query, bean)
+        register.delete(_context.getConnection(), sets[0])
+        register.insert(_context.getConnection(), sets)
         */
 
         _context.databaseFinalize()
