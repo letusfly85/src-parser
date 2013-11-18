@@ -1,6 +1,4 @@
-package com.jellyfish95.srcParser.helper
-
-import com.jellyfish85.srcParser.helper.SqlRegexHelper
+package com.jellyfish85.srcParser.helper
 
 import static org.junit.Assert.assertFalse
 import static org.junit.Assert.assertThat
@@ -73,6 +71,18 @@ class SqlRegexHelperTest {
     @Test
     public void isWhenOnlyScopeMatched() {
         def str = " WHEN"
+        assertTrue(helper.isOperator(str))
+    }
+
+    /**
+     * == isElseOnlyScopeMatched ==
+     *
+     * check matched string returns True
+     *
+     */
+    @Test
+    public void isElseOnlyScopeMatched() {
+        def str = " ELSE "
         assertTrue(helper.isOperator(str))
     }
 

@@ -13,16 +13,26 @@ class TableParserTest extends Specification {
   val parser: TableParser[RsSqlTablesBean] = new TableParser[RsSqlTablesBean]
 
   "return true" should {
-    val sql  = "SELECT SYSDATE FROM DUAL"
-    val tree = parser.getCommonTree(sql)
+    val sqlSelect  = "SELECT SYSDATE FROM DUAL"
+    val tree01 = parser.getCommonTree(sqlSelect)
     val entry00: RsSqlTablesBean = new RsSqlTablesBean
     entry00.fileNameAttr.setValue("my.file")
 
-    val entry01: RsSqlTablesBean = new RsSqlTablesBean
-    entry01.crudTypeAttr.value = "SELECT"
+    val entrySelect: RsSqlTablesBean = new RsSqlTablesBean
+    entrySelect.crudTypeAttr.value = "SELECT"
 
     "return SELECT for SQL 'SELECT SYSDATE FROM DUAL'" in {
-      parser.getInitCrud(tree, entry00, sql).crudTypeAttr.value must beEqualTo(entry01.crudTypeAttr.value)
+      parser.getInitCrud(tree01, entrySelect, sqlSelect).crudTypeAttr.value must beEqualTo(entrySelect.crudTypeAttr.value)
+    }
+
+
+    val entryDelete: RsSqlTablesBean = new RsSqlTablesBean
+    entryDelete.crudTypeAttr.value = "DELETE"
+
+    val sqlDelete  = "DELETE FROM DUAL"
+    val tree02 = parser.getCommonTree(sqlDelete)
+    "return DELETE for SQL 'DELETE FROM DUAL'" in {
+      parser.getInitCrud(tree02, entryDelete, sqlDelete).crudTypeAttr.value must beEqualTo(entryDelete.crudTypeAttr.value)
     }
 
   }
