@@ -26,7 +26,6 @@ trait Stream2String {
       }
 
       query = buf.toString()
-      query
 
     } catch {
       case e: NullPointerException =>
@@ -37,7 +36,6 @@ trait Stream2String {
         inputStream.close()
       }
     }
-
 
     query
   }

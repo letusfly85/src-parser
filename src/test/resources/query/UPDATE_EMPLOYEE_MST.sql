@@ -1,0 +1,5 @@
+UPDATE EMPLOYEE
+SET
+    USER_ID = ?
+WHERE
+    1 = 1

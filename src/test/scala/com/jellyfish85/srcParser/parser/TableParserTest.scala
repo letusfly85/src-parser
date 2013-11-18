@@ -16,26 +16,40 @@ class TableParserTest extends Specification with Stream2String {
   "return true" should {
 
     val selectStream = getClass.getResourceAsStream("/query/SELECT_DUAL.sql")
-    val sqlSelect: String = stream2String(selectStream)
-    val tree01 = parser.getCommonTree(sqlSelect)
-    val entry00: RsSqlTablesBean = new RsSqlTablesBean
-    entry00.fileNameAttr.setValue("my.file")
+    val selectSql: String = stream2String(selectStream)
+
+    val tree01 = parser.getCommonTree(selectSql)
+    val selectEntry: RsSqlTablesBean = new RsSqlTablesBean
+    selectEntry.fileNameAttr.setValue("my.file")
 
     val entrySelect: RsSqlTablesBean = new RsSqlTablesBean
     entrySelect.crudTypeAttr.value = "SELECT"
 
     "return SELECT for SQL 'SELECT SYSDATE FROM DUAL'" in {
-      parser.getInitCrud(tree01, entrySelect, sqlSelect).crudTypeAttr.value must beEqualTo(entrySelect.crudTypeAttr.value)
+      parser.getInitCrud(tree01, entrySelect, selectSql).crudTypeAttr.value must beEqualTo(entrySelect.crudTypeAttr.value)
     }
 
 
-    val entryDelete: RsSqlTablesBean = new RsSqlTablesBean
-    entryDelete.crudTypeAttr.value = "DELETE"
+    val deleteStream = getClass.getResourceAsStream("/query/DELETE_USERS.sql")
+    val deleteSql: String = stream2String(deleteStream)
+    val tree02 = parser.getCommonTree(deleteSql)
 
-    val sqlDelete  = "DELETE FROM DUAL"
-    val tree02 = parser.getCommonTree(sqlDelete)
-    "return DELETE for SQL 'DELETE FROM DUAL'" in {
-      parser.getInitCrud(tree02, entryDelete, sqlDelete).crudTypeAttr.value must beEqualTo(entryDelete.crudTypeAttr.value)
+    val deleteEntry: RsSqlTablesBean = new RsSqlTablesBean
+    deleteEntry.crudTypeAttr.value = "DELETE"
+
+    "return DELETE for SQL 'DELETE FROM USERS'" in {
+      parser.getInitCrud(tree02, deleteEntry, deleteSql).crudTypeAttr.value must beEqualTo(deleteEntry.crudTypeAttr.value)
+    }
+
+    val updateStream = getClass.getResourceAsStream("/query/UPDATE_EMPLOYEE_MST.sql")
+    val updateSql: String = stream2String(updateStream)
+    val tree03 = parser.getCommonTree(updateSql)
+
+    val updateEntry: RsSqlTablesBean = new RsSqlTablesBean
+    updateEntry.crudTypeAttr.value = "UPDATE"
+
+    "return UPDATE for SQL 'UPDATE EMPLOYEE MST'" in {
+      parser.getInitCrud(tree03, updateEntry, updateSql).crudTypeAttr.value must beEqualTo(updateEntry.crudTypeAttr.value)
     }
 
   }
