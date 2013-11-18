@@ -36,7 +36,12 @@ dependencies {
 
     runtime files('lib/ojdbc14.jar')
 
-    compile      'junit:junit:4.11'
+    testCompile      'junit:junit:4.11'
+
+    testCompile      group: "org.specs2", name: "specs2_2.9.2", version:"1.12.1"
+
+    testCompile      group: 'org.specs2', name: 'specs2-scalaz-core_2.9.1',version:'6.0.1'
+
 }
 
 
