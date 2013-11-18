@@ -64,6 +64,18 @@ class SqlRegexHelperTest {
         assertTrue(helper.isOperator(str))
     }
 
+    /**
+     * == isWhenOnlyScopeMatched ==
+     *
+     * check matched string returns True
+     *
+     */
+    @Test
+    public void isWhenOnlyScopeMatched() {
+        def str = " WHEN"
+        assertTrue(helper.isOperator(str))
+    }
+
     //todo check sql operator path
 
 }
