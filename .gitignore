@@ -8,3 +8,4 @@ build
 lib/dbaccessor.jar
 lib/svnaccessor.jar
 workspace
+target

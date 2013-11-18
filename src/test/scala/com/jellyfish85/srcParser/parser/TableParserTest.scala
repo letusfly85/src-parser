@@ -6,14 +6,17 @@ import org.junit.runner.RunWith
 
 import java.math.BigDecimal
 import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSqlTablesBean
+import com.jellyfish85.srcParser.utils.Stream2String
 
 @RunWith(classOf[JUnitRunner])
-class TableParserTest extends Specification {
+class TableParserTest extends Specification with Stream2String {
 
   val parser: TableParser[RsSqlTablesBean] = new TableParser[RsSqlTablesBean]
 
   "return true" should {
-    val sqlSelect  = "SELECT SYSDATE FROM DUAL"
+
+    val selectStream = getClass.getResourceAsStream("/query/SELECT_DUAL.sql")
+    val sqlSelect: String = stream2String(selectStream)
     val tree01 = parser.getCommonTree(sqlSelect)
     val entry00: RsSqlTablesBean = new RsSqlTablesBean
     entry00.fileNameAttr.setValue("my.file")
