@@ -159,36 +159,21 @@ class TableParser[A <: RsSqlTablesBeanTrait](implicit m:ClassManifest[A]) {
         val anyRef = classManifest[A].erasure
         val newAttr: A = anyRef.newInstance.asInstanceOf[A]
 
-        newAttr.pathAttr.setValue(attr.pathAttr.value)
-        newAttr.projectNameAttr.setValue(attr.projectNameAttr.value)
-        newAttr.headRevisionAttr.setValue(attr.headRevisionAttr.value)
-        newAttr.revisionAttr.setValue(attr.revisionAttr.value)
-
+        attr.copyAttr(newAttr)
         newAttr.tableNameAttr.value  = tree.getChild(0).getText
-        newAttr.tableAliasAttr.value = attr.tableAliasAttr.value
         newAttr.depthAttr.value      = new BigDecimal(level)
-
-        newAttr.fileNameAttr.value = attr.fileNameAttr.value
-        newAttr.pathAttr.value     = attr.pathAttr.value
         newAttr.crudTypeAttr.value = "SELECT"
         newAttr.callTypeAttr.value = "SQL"
+
         attrList ::= newAttr
 
       case "SELECT_MODE"    =>
         val anyRef = classManifest[A].erasure
         val newAttr: A = anyRef.newInstance.asInstanceOf[A]
 
-        newAttr.pathAttr.setValue(attr.pathAttr.value)
-        newAttr.projectNameAttr.setValue(attr.projectNameAttr.value)
-        newAttr.headRevisionAttr.setValue(attr.headRevisionAttr.value)
-        newAttr.revisionAttr.setValue(attr.revisionAttr.value)
-
+        attr.copyAttr(newAttr)
         newAttr.tableNameAttr.value  = "INLINE VIEW"
-        newAttr.tableAliasAttr.value = attr.tableAliasAttr.value
         newAttr.depthAttr.value      = new BigDecimal(level)
-
-        newAttr.fileNameAttr.value = attr.fileNameAttr.value
-        newAttr.pathAttr.value     = attr.pathAttr.value
         newAttr.crudTypeAttr.value = "SELECT"
         newAttr.callTypeAttr.value = "SQL"
 
@@ -236,10 +221,10 @@ class TableParser[A <: RsSqlTablesBeanTrait](implicit m:ClassManifest[A]) {
             for (i <- 0 until children.size()) {
 
               val nextTree = children.get(i).asInstanceOf[CommonTree]
-              val newAttr: A = attr
 
-              newAttr.fileNameAttr.value = attr.fileNameAttr.value
-              newAttr.crudTypeAttr.value = attr.crudTypeAttr.value
+              val anyRef = classManifest[A].erasure
+              val newAttr: A = anyRef.newInstance.asInstanceOf[A]
+              attr.copyAttr(newAttr)
 
               val newAttrList: List[A] = specifySelectSQLTable(nextTree, newAttr, level, sql)
               if (newAttrList.size > 0) {
