@@ -1,8 +1,6 @@
 package com.jellyfish85.srcParser.eraser
 
-import static org.junit.Assert.assertFalse
 import static org.junit.Assert.assertThat
-import static org.junit.Assert.assertTrue
 import static org.hamcrest.CoreMatchers.*
 
 import org.junit.Test
@@ -30,12 +28,18 @@ public class SqlFwEraserTest {
 
         def str01 = "--%hoge"
         assertThat(eraser.replaceFrameworkVariant(str01), is("/* fw_flg */\n"))
+
+        def str02 = "null"
+        assertThat(eraser.replaceFrameworkVariant(str02), is("NULL\n"))
+
+        def str03 = "亜亜亜"
+        assertThat(eraser.replaceFrameworkVariant(str03), is("var\n"))
+
+        def str04 = ":_ab"
+        assertThat(eraser.replaceFrameworkVariant(str04), is(" 1 = 1\n"))
+
+        def str05 = "       -- aaaaa"
+        assertThat(eraser.replaceFrameworkVariant(str05), is("\n"))
     }
 
-    /*
-    @Test
-    public void testReplaceFrameworkOperator() throws Exception {
-
-    }
-    */
 }
