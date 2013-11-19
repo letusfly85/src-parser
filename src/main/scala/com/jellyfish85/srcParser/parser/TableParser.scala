@@ -443,15 +443,7 @@ class TableParser[A <: RsSqlTablesBeanTrait](implicit m:ClassManifest[A]) {
     val anyRef = classManifest[A].erasure
     val newAttr: A = anyRef.newInstance.asInstanceOf[A]
 
-    newAttr.pathAttr.setValue(attr.pathAttr.value)
-    newAttr.fileNameAttr.setValue(attr.fileNameAttr.value)
-    newAttr.projectNameAttr.setValue(attr.projectNameAttr.value)
-    newAttr.headRevisionAttr.setValue(attr.headRevisionAttr.value)
-    newAttr.revisionAttr.setValue(attr.revisionAttr.value)
-    newAttr.extensionAttr.setValue(attr.extensionAttr.value)
-    newAttr.authorAttr.setValue(attr.authorAttr.value)
-    newAttr.commitYmdAttr.setValue(attr.commitYmdAttr.value)
-    newAttr.commitHmsAttr.setValue(attr.commitHmsAttr.value)
+    attr.copyAttr(newAttr)
     newAttr.depthAttr.setValue(new BigDecimal(0))
     newAttr.tableNameAttr.setValue(tableName)
     newAttr.crudTypeAttr.setValue("TRUNCATE")
@@ -459,5 +451,4 @@ class TableParser[A <: RsSqlTablesBeanTrait](implicit m:ClassManifest[A]) {
 
     newAttr
   }
-
 }
