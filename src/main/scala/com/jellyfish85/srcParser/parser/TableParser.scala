@@ -99,40 +99,42 @@ class TableParser[A <: RsSqlTablesBeanTrait](implicit m:ClassManifest[A]) {
   /**
    * == getCrudRecursive ==
    *
-   * @param target
+   * @param attr
    * @param level
    * @param sql
    * @return
    */
-  def getCrudRecursive(target: A, level: Int, sql: String) :List[A]= {
-    var entry: A = target
+  def getCrudRecursive(attr: A, level: Int, sql: String) :List[A]= {
+    val anyRef = classManifest[A].erasure
+    var newAttr: A = anyRef.newInstance.asInstanceOf[A]
+    attr.copyAttr(newAttr)
 
     val tree = getCommonTree(sql)
-    entry = getInitCrud(tree, entry, sql)
+    newAttr = getInitCrud(tree, newAttr, sql)
 
     var list :List[A] = List()
-    entry.crudTypeAttr.value match {
+    newAttr.crudTypeAttr.value match {
       case "SELECT" =>
-        list :::= specifySelectSQLTable(tree, entry, level, sql)
+        list :::= specifySelectSQLTable(tree, newAttr, level, sql)
 
       case "DELETE" =>
-        list :::= specifyDeleteSQLTable(tree, entry, level, sql)
+        list :::= specifyDeleteSQLTable(tree, newAttr, level, sql)
 
       case "INSERT" =>
-        list :::= specifyInsertSQLTable(tree, entry, level, sql)
+        list :::= specifyInsertSQLTable(tree, newAttr, level, sql)
 
       case "UPDATE" =>
-        list :::= specifyUpdateSQLTable(tree, entry, level, sql)
+        list :::= specifyUpdateSQLTable(tree, newAttr, level, sql)
 
       case "MERGE"  =>
-        list ::= specifyMergeSQLTable(tree, entry, level, sql)
+        list ::= specifyMergeSQLTable(tree, newAttr, level, sql)
 
       case _ =>
     }
 
     list.foreach {bean: A =>
-      bean.fileNameAttr.value      = target.fileNameAttr.value
-      bean.persisterNameAttr.value = target.persisterNameAttr.value
+      bean.fileNameAttr.value      = attr.fileNameAttr.value
+      bean.persisterNameAttr.value = attr.persisterNameAttr.value
       bean.callTypeAttr.value      = "SQL"
     }
 

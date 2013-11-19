@@ -85,6 +85,4 @@ class SqlRegexHelperTest {
         assertTrue(helper.isOperator(str))
     }
 
-    //todo check sql operator path
-
 }
