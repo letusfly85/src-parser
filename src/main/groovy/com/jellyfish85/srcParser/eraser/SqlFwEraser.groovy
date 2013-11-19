@@ -33,8 +33,6 @@ class SqlFwEraser extends SqlRegexHelper {
 
         result = result.replace("null", "NULL")
 
-        result = result.replaceFirst(/--%([\s|\t]+)([a-z]+).*/, "/* fw_flg */")
-
         result = result.replaceAll(/\$:_([A-Za-z0-9.\_-]+)\$/,  ":variance")
         result = result.replaceAll(/\$([A-Za-z0-9.\_-]+)\$/,    ":variance")
         result = result.replaceAll(/\$([A-Za-z0-9.\_-]+)/,      ":variance")
@@ -52,7 +50,7 @@ class SqlFwEraser extends SqlRegexHelper {
             result = result.replaceAll(/:([a-zA-Z0-9\_.]+)/, ":variance")
         }
 
-
+        result = result.replaceFirst(/--%([\s|\t]*)([a-z]+).*/, "/* fw_flg */")
         return (result + "\n")
     }
 
