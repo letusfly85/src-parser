@@ -21,27 +21,29 @@ class ConfigActionParser {
         def resultSets = new ArrayList<RsConfigAttributesBean>()
 
         list.each {SVNRequestBean bean ->
-            parse(app, bean).each {RsConfigAttributesBean entry -> resultSets.add(entry)}
+            def path = (new File(app.workspace(), bean.path())).getPath()
+            parse(bean, path).each {RsConfigAttributesBean entry -> resultSets.add(entry)}
         }
 
         return resultSets
     }
 
     /**
-     *
+     * == parse ==
      *
      * @param app
      * @param bean
+     * @param path
      * @return
      */
     public static ArrayList<RsConfigAttributesBean> parse(
-            ApplicationProperties app,
-            SVNRequestBean        bean
+            SVNRequestBean        bean,
+            String                path
     ) {
 
         def resultSets = new ArrayList<RsConfigAttributesBean>()
         try {
-            def file = new File(app.workspace(), bean.path())
+            def file = new File(path)
             if (!file.exists()) {
                 new RuntimeException("file is not exists!")
             }

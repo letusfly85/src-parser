@@ -57,7 +57,6 @@ class PageActionParser {
 
                 def node = nodeList.item(i)
                 Element entry  = (Element)node
-                //println("[_TARGET]" + bean.pathAttr().value() + "\t" + entry.getAttribute("id"))
 
                 def _nodeList = entry.getElementsByTagName("param")
                 if (_nodeList.length > 0) {
@@ -75,7 +74,6 @@ class PageActionParser {
                             entity.authorAttr().setValue(bean.authorAttr().value())
                             entity.commitYmdAttr().setValue(bean.commitYmdAttr().value())
                             entity.commitHmsAttr().setValue(bean.commitHmsAttr().value())
-                            //entity.pageNameAttr().setValue(FilenameUtils.)
                             entity.extensionAttr().setValue(bean.extensionAttr().value())
 
                             entity.actionNameAttr().setValue(_entry.getAttribute("value"))
