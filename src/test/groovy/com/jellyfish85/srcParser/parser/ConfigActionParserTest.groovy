@@ -20,7 +20,7 @@ import org.junit.Test
 /**
  * == ConfigActionParserTest ==
  *
- * @todo
+ *
  */
 class ConfigActionParserTest {
 
