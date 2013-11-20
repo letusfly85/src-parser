@@ -17,4 +17,38 @@
             </to>
         </command>
     </action>
+
+    <action name="my.action2">
+        <command name="my.command2" type="my.type">
+            <description>
+                <![CDATA[
+                        this is test data
+                        ]]>
+            </description>
+            <from>
+                <gamen id="my.id"/>
+            </from>
+            <search subjectid="my.subjectId2"/>
+            <to>
+                <next-command name="next.my.command"/>
+            </to>
+        </command>
+    </action>
+
+    <action name="my.action3">
+        <command name="my.command3" type="my.type">
+            <description>
+                <![CDATA[
+                        this is test data
+                        ]]>
+            </description>
+            <from>
+                <gamen id="my.id"/>
+            </from>
+            <excel subjectid="my.subjectId3"/>
+            <to>
+                <next-command name="next.my.command"/>
+            </to>
+        </command>
+    </action>
 </jellyfish85>
