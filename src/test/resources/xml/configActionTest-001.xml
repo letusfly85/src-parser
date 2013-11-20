@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<jellyfish85>
+    <action name="my.action">
+        <command name="my.command" type="my.type">
+            <description>
+                <![CDATA[
+                        this is test data
+                        ]]>
+            </description>
+            <from>
+                <gamen id="my.id"/>
+            </from>
+            <entry type="save"  subjectid="my.subjectId"/>
+            <to>
+                <next-command name="next.my.command"/>
+            </to>
+        </command>
+    </action>
+</jellyfish85>

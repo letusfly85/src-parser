@@ -4,7 +4,6 @@ import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsConfigAttributesBean
 import com.jellyfish85.srcParser.converter.ConvSVNRequestBean2RsConfigAttributesBean
 import com.jellyfish85.srcParser.utils.ApplicationProperties
 import com.jellyfish85.svnaccessor.bean.SVNRequestBean
-import org.apache.commons.io.FilenameUtils
 import org.w3c.dom.Element
 import org.xml.sax.SAXParseException
 
