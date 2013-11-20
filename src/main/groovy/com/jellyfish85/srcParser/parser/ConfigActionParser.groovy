@@ -22,7 +22,11 @@ class ConfigActionParser {
 
         list.each {SVNRequestBean bean ->
             def path = (new File(app.workspace(), bean.path())).getPath()
-            parse(bean, path).each {RsConfigAttributesBean entry -> resultSets.add(entry)}
+            InputStream inputStream = getClass().getResourceAsStream(path)
+
+            parse(bean, inputStream).each {RsConfigAttributesBean entry -> resultSets.add(entry)}
+
+            inputStream.close()
         }
 
         return resultSets
@@ -38,19 +42,14 @@ class ConfigActionParser {
      */
     public static ArrayList<RsConfigAttributesBean> parse(
             SVNRequestBean        bean,
-            String                path
+            InputStream           inputStream
     ) {
 
         def resultSets = new ArrayList<RsConfigAttributesBean>()
         try {
-            def file = new File(path)
-            if (!file.exists()) {
-                new RuntimeException("file is not exists!")
-            }
-
             DocumentBuilderFactory factory   = DocumentBuilderFactory.newInstance()
             DocumentBuilder        db        = factory.newDocumentBuilder()
-            org.w3c.dom.Document   doc       = db.parse(file)
+            org.w3c.dom.Document   doc       = db.parse(inputStream)
 
             Element elem                     = doc.getDocumentElement()
             org.w3c.dom.NodeList nodeList    = elem.getElementsByTagName("command")
