@@ -17,11 +17,16 @@ class ConfigActionParser {
     public static ArrayList<RsConfigAttributesBean> parse(
             ApplicationProperties            app,
             ArrayList<SVNRequestBean>        list
-    ) {
+    ) throws FileNotFoundException {
         def resultSets = new ArrayList<RsConfigAttributesBean>()
 
         list.each {SVNRequestBean bean ->
-            def path = (new File(app.workspace(), bean.path())).getPath()
+            def file = new File(app.workspace(), bean.path())
+            if (!file.exists()) {
+                throw new FileNotFoundException()
+            }
+
+            def path = (file).getPath()
             InputStream inputStream = getClass().getResourceAsStream(path)
 
             parse(bean, inputStream).each {RsConfigAttributesBean entry -> resultSets.add(entry)}
