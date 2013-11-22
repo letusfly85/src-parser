@@ -1,7 +1,9 @@
 package com.jellyfish85.srcParser.runner
 
+import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSubjectidBlpathIdxDao
 import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSvnSrcInfoDao
 import com.jellyfish85.srcParser.converter.ConvRsSvnSrcInfoBean2SVNRequestBean
+import com.jellyfish85.srcParser.downloader.DownloadSource2Workspace
 import com.jellyfish85.srcParser.parser.BlSubjectIdParser
 
 /**
@@ -27,6 +29,8 @@ class BlSubjectIdRunner {
         def conn = _context.getConnection()
         def app  = _context.app
 
+        def dl   = new DownloadSource2Workspace()
+
         def dao  = new RsSvnSrcInfoDao()
         def list = dao.findByExtension(conn, app.al())
 
@@ -35,8 +39,13 @@ class BlSubjectIdRunner {
         def converter = new ConvRsSvnSrcInfoBean2SVNRequestBean()
         def _list     = dao.convert(converter.convert(list))
 
+        dl.downLoadAll(app, _list)
+
         //todo
         //def sets = parser.parse(_list)
+
+        def register = new RsSubjectidBlpathIdxDao()
+
 
         _context.databaseFinalize()
     }
