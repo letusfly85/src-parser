@@ -1,6 +1,7 @@
 package com.jellyfish85.srcParser.parser
 
 import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSubjectidBlpathIdxBean
+import com.jellyfish85.srcParser.utils.ApplicationProperties
 import com.jellyfish85.svnaccessor.bean.SVNRequestBean
 import org.w3c.dom.Element
 import org.xml.sax.SAXParseException
@@ -30,14 +31,18 @@ class BlSubjectIdParser {
      * @throws IOException
      */
     public static ArrayList<RsSubjectidBlpathIdxBean> parse (
-            ArrayList<SVNRequestBean>  list,
-            String                     path
-    ) throws java.io.IOException {
+            ApplicationProperties      app,
+            ArrayList<SVNRequestBean>  list
+    ) throws java.io.IOException, NullPointerException {
+
+        def workspace = app.workspace()
 
         def resultSets = new ArrayList<RsSubjectidBlpathIdxBean>()
 
         list.each {SVNRequestBean bean ->
-            InputStream inputStream = getClass().getResourceAsStream(path)
+            def file = new File(workspace, bean.path())
+
+            InputStream inputStream = new FileInputStream(file)
 
             parse(bean, inputStream).each {RsSubjectidBlpathIdxBean entry -> resultSets.add(entry)}
 

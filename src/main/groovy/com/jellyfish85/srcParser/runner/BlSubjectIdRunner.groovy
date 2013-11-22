@@ -1,5 +1,6 @@
 package com.jellyfish85.srcParser.runner
 
+import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSubjectidBlpathIdxBean
 import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSubjectidBlpathIdxDao
 import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSvnSrcInfoDao
 import com.jellyfish85.srcParser.converter.ConvRsSvnSrcInfoBean2SVNRequestBean
@@ -41,11 +42,14 @@ class BlSubjectIdRunner {
 
         dl.downLoadAll(app, _list)
 
-        //todo
-        //def sets = parser.parse(_list)
+        def sets = parser.parse(app, _list)
 
         def register = new RsSubjectidBlpathIdxDao()
 
+        sets.each {RsSubjectidBlpathIdxBean entry ->
+            register.delete(conn, entry)
+            register.insert(conn, entry)
+        }
 
         _context.databaseFinalize()
     }
