@@ -52,8 +52,9 @@ object ApplicationProperties {
   def targetProjectNames: List[String] = {
     var list: List[String] = List()
 
+    var inputStream: InputStream = null
     try {
-      val inputStream: InputStream = getClass().getResourceAsStream("/projectName.lst")
+      inputStream = getClass().getResourceAsStream("/projectName.lst")
 
       val reader: BufferedReader =
         new BufferedReader(new InputStreamReader(inputStream, "UTF-8"))
@@ -69,6 +70,9 @@ object ApplicationProperties {
           list ::= content
         }
       }
+
+    } finally {
+      if (inputStream != null) inputStream.close()
     }
 
     list
