@@ -114,3 +114,9 @@ task DtdXmlDownloadRunner (type: JavaExec) {
     main = "com.jellyfish85.srcParser.runner.DtdXmlDownloadRunner"
     args = project.runargs.split(',').toList()
 }
+
+task BPPGRunner (type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "com.jellyfish85.srcParser.runner.BPPGRunner"
+    args = project.runargs.split(',').toList()
+}

@@ -34,6 +34,14 @@ object ApplicationProperties {
 
   def dtdPath:    String = {load; property.getProperty("dtdPath")}
 
+  def output:     String = {load; property.getProperty("output")}
+
+  def outputProp: String = {load; property.getProperty("outputProp")}
+
+  def bpp:        String = {load; property.getProperty("bpp")}
+
+  def logicPath:  String = {load; property.getProperty("logicPath")}
+
 
   /**
    *
