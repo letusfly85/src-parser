@@ -38,16 +38,14 @@ class BlSubjectIdRunner {
 
         def list = dao.findByExtension(conn, app.al())
         def _list     = dao.convert(converter.convert(list))
-        dl.downLoadAll(app, _list, false)
+        //dl.downLoadAll(app, _list, false)
 
         def parser = new BlSubjectIdParser()
         def sets = parser.parse(app, _list)
 
         def register = new RsSubjectidBlpathIdxDao()
-        sets.each {RsSubjectidBlpathIdxBean entry ->
-            register.delete(conn, entry)
-            register.insert(conn, entry)
-        }
+        register.deleteAll(conn)
+        register.insert(conn, sets)
 
         _context.databaseFinalize()
     }
