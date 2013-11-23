@@ -19,9 +19,7 @@ class ProjectNameHelper {
      * @param path
      * @return
      */
-    public String getProjectName(ApplicationProperties app, String path) {
-        def targetProjectNames = app._targetProjectNames()
-
+    public String getProjectName(ArrayList<String> targetProjectNames, String path) {
         def result = ""
         targetProjectNames.each {String projectName ->
             def reg = ".*" + projectName + ".*"

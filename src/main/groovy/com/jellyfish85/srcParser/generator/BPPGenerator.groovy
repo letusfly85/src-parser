@@ -32,8 +32,9 @@ class BPPGenerator {
         PrintWriter pw = new PrintWriter(new BufferedWriter(
                 new OutputStreamWriter(new FileOutputStream(targetFile),"UTF-8")))
 
+        def targetProjectNames = app._targetProjectNames()
         list.each {RsSubjectidBlpathIdxBean bean ->
-            def projectName = helper.getProjectName(app, bean.pathAttr().value())
+            def projectName = helper.getProjectName(targetProjectNames, bean.pathAttr().value())
             def removePath   = app.ap() + projectName + app.logicPath()
             def relativePath = bean.pathAttr().value().replace(removePath, "")
 

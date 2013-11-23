@@ -3,7 +3,7 @@
 build
 .idea
 .gradle
-*properties
+*.properties
 *lst
 lib/dbaccessor.jar
 lib/svnaccessor.jar
