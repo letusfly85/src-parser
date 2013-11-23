@@ -5,7 +5,6 @@ import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSubjectidBlpathIdxDao
 import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSvnSrcInfoDao
 import com.jellyfish85.srcParser.converter.ConvRsSvnSrcInfoBean2SVNRequestBean
 import com.jellyfish85.srcParser.downloader.DownloadSource2Workspace
-import com.jellyfish85.srcParser.helper.DtdFolderHelper
 import com.jellyfish85.srcParser.parser.BlSubjectIdParser
 
 /**
@@ -45,7 +44,7 @@ class BlSubjectIdRunner {
         def _sets = new ArrayList<RsSubjectidBlpathIdxBean>()
 
         sets.each {RsSubjectidBlpathIdxBean bean ->
-            if (bean.subjectGroupIdAttr().value() != null) {
+            if (bean.subjectGroupIdAttr().value() != null && bean.subjectGroupIdAttr().value() != "") {
                 _sets.add(bean)
             } else {
                 println("[WARN]" + bean.pathAttr().value())
