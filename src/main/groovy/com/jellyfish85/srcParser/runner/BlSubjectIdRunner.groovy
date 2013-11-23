@@ -37,7 +37,7 @@ class BlSubjectIdRunner {
 
         def list = dao.findByExtension(conn, app.al())
         def _list     = dao.convert(converter.convert(list))
-        //dl.downLoadAll(app, _list, false)
+        dl.downLoadAll(app, _list, false)
 
         def parser = new BlSubjectIdParser()
         def sets = parser.parse(app, _list)
