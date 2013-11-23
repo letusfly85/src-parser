@@ -28,4 +28,20 @@ public class DownloadSource2Workspace {
         getter.simpleGetFilesWithDirectory(requestList, workspace)
 
     }
+
+
+    public static void downLoadAll (
+            ApplicationProperties app,
+            ArrayList<SVNRequestBean> list,
+            Boolean cleanFlag
+    ) {
+
+        def workspace = new File(app.workspace())
+        if (!workspace.exists()) {
+            FileUtils.forceMkdir(workspace)
+        }
+        def getter = new SVNGetFiles()
+        getter.simpleGetFilesWithDirectory(list, workspace, cleanFlag)
+    }
+
 }

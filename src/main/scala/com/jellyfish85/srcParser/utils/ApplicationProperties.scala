@@ -2,6 +2,7 @@ package com.jellyfish85.srcParser.utils
 
 import java.util.Properties
 import java.io._
+import java.util
 
 object ApplicationProperties {
 
@@ -9,25 +10,29 @@ object ApplicationProperties {
 
   def load = property.load(getClass().getResourceAsStream("/workspace.properties"))
 
-  def workspace: String = {load; property.getProperty("workspace")}
+  def workspace:  String = {load; property.getProperty("workspace")}
 
-  def trunk: String = {load; property.getProperty("trunk")}
+  def trunk:      String = {load; property.getProperty("trunk")}
 
-  def src:   String = {load; property.getProperty("src")  }
+  def src:        String = {load; property.getProperty("src")  }
 
-  def app:   String = {load; property.getProperty("app")  }
+  def app:        String = {load; property.getProperty("app")  }
 
-  def page:  String = {load; property.getProperty("page")}
+  def ap :        String = {load; property.getProperty("app")  }
 
-  def uql:   String = {load; property.getProperty("uql")}
+  def page:       String = {load; property.getProperty("page")}
 
-  def al:    String = {load; property.getProperty("al")}
+  def uql:        String = {load; property.getProperty("uql")}
 
-  def boj:   String = {load; property.getProperty("boj")}
+  def al:         String = {load; property.getProperty("al")}
 
-  def sql:   String = {load; property.getProperty("sql")}
+  def boj:        String = {load; property.getProperty("boj")}
+
+  def sql:        String = {load; property.getProperty("sql")}
 
   def expSqlPath: String = {load; property.getProperty("expSqlPath")}
+
+  def dtdPath:    String = {load; property.getProperty("dtdPath")}
 
 
   /**

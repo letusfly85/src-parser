@@ -30,22 +30,24 @@ class BlSubjectIdRunner {
         def conn = _context.getConnection()
         def app  = _context.app
 
-        def dl   = new DownloadSource2Workspace()
 
         def dao  = new RsSvnSrcInfoDao()
+        def dl   = new DownloadSource2Workspace()
+        def converter = new ConvRsSvnSrcInfoBean2SVNRequestBean()
+
+
+        def dtdList = dao.findByLikePath(conn, "%" + app.dtdPath() + "%")
+        def _dtdList = dao.convert(converter.convert(dtdList))
+        dl.downLoadAll(app, _dtdList, true)
+
         def list = dao.findByExtension(conn, app.al())
+        def _list     = dao.convert(converter.convert(list))
+        dl.downLoadAll(app, _list, false)
 
         def parser = new BlSubjectIdParser()
-
-        def converter = new ConvRsSvnSrcInfoBean2SVNRequestBean()
-        def _list     = dao.convert(converter.convert(list))
-
-        dl.downLoadAll(app, _list)
-
         def sets = parser.parse(app, _list)
 
         def register = new RsSubjectidBlpathIdxDao()
-
         sets.each {RsSubjectidBlpathIdxBean entry ->
             register.delete(conn, entry)
             register.insert(conn, entry)
@@ -53,5 +55,4 @@ class BlSubjectIdRunner {
 
         _context.databaseFinalize()
     }
-
 }
