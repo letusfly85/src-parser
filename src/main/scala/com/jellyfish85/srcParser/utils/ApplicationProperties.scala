@@ -66,6 +66,12 @@ object ApplicationProperties {
     list
   }
 
+  def _targetProjectNames: util.ArrayList[String] = {
+    val list: util.ArrayList[String] = new util.ArrayList[String]()
+    targetProjectNames.foreach {projectName: String => list.add(projectName)}
+    list
+  }
+
   def configFileNames: List[String] = {
     var list: List[String] = List()
 

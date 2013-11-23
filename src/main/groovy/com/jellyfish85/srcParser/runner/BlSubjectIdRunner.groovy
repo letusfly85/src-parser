@@ -5,6 +5,7 @@ import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSubjectidBlpathIdxDao
 import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSvnSrcInfoDao
 import com.jellyfish85.srcParser.converter.ConvRsSvnSrcInfoBean2SVNRequestBean
 import com.jellyfish85.srcParser.downloader.DownloadSource2Workspace
+import com.jellyfish85.srcParser.helper.DtdFolderHelper
 import com.jellyfish85.srcParser.parser.BlSubjectIdParser
 
 /**
@@ -39,6 +40,9 @@ class BlSubjectIdRunner {
         def dtdList = dao.findByLikePath(conn, "%" + app.dtdPath() + "%")
         def _dtdList = dao.convert(converter.convert(dtdList))
         dl.downLoadAll(app, _dtdList, true)
+
+        def helper = new DtdFolderHelper()
+        helper.copyDtdXml(app)
 
         def list = dao.findByExtension(conn, app.al())
         def _list     = dao.convert(converter.convert(list))
