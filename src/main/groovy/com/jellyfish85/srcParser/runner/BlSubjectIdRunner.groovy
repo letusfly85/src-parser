@@ -42,14 +42,19 @@ class BlSubjectIdRunner {
 
         def parser = new BlSubjectIdParser()
         def sets = parser.parse(app, _list)
+        def _sets = new ArrayList<RsSubjectidBlpathIdxBean>()
 
         sets.each {RsSubjectidBlpathIdxBean bean ->
-            println(bean.subjectGroupIdAttr().value() + "\t" + bean.pathAttr().value())
+            if (bean.subjectGroupIdAttr().value() != null) {
+                _sets.add(bean)
+            } else {
+                println("[WARN]" + bean.pathAttr().value())
+            }
         }
 
         def register = new RsSubjectidBlpathIdxDao()
         register.deleteAll(conn)
-        register.insert(conn, sets)
+        register.insert(conn, _sets)
 
         _context.databaseFinalize()
     }
