@@ -36,14 +36,6 @@ class BlSubjectIdRunner {
         def dl   = new DownloadSource2Workspace()
         def converter = new ConvRsSvnSrcInfoBean2SVNRequestBean()
 
-
-        def dtdList = dao.findByLikePath(conn, "%" + app.dtdPath() + "%")
-        def _dtdList = dao.convert(converter.convert(dtdList))
-        dl.downLoadAll(app, _dtdList, true)
-
-        def helper = new DtdFolderHelper()
-        helper.copyDtdXml(app)
-
         def list = dao.findByExtension(conn, app.al())
         def _list     = dao.convert(converter.convert(list))
         dl.downLoadAll(app, _list, false)
