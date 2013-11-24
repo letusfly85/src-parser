@@ -27,7 +27,6 @@ class ConfigActionParser {
             }
 
             def path = (file).getPath()
-            //InputStream inputStream = getClass().getResourceAsStream(path)
             InputStream inputStream = new FileInputStream(path)
 
             parse(bean, inputStream).each {RsConfigAttributesBean entry -> resultSets.add(entry)}

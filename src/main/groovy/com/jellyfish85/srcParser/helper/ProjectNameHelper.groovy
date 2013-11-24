@@ -1,7 +1,5 @@
 package com.jellyfish85.srcParser.helper
 
-import com.jellyfish85.srcParser.utils.ApplicationProperties
-
 /**
  * == ProjectNameHelper ==
  *
