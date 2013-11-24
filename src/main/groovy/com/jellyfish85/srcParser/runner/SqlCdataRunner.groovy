@@ -41,7 +41,7 @@ class SqlCdataRunner {
         */
 
        def dl     = new DownloadSource2Workspace()
-       dl.downLoadAll(app, requestList)
+       dl.downLoadAll(app, requestList, true)
 
        def register = new RsSqlCdataDao()
        register.truncate(conn)
@@ -57,7 +57,7 @@ class SqlCdataRunner {
 
        requestList = dao.convert(converter.convert(list))
 
-       dl.downLoadAll(app, requestList)
+       dl.downLoadAll(app, requestList, false)
 
        requestList.each {SVNRequestBean target ->
            def sets = parser.parse(target, app)

@@ -24,7 +24,7 @@ class ConfigActionRunner {
         def list     = getConfigFileNames()
 
         //download all page files and parse them
-        dl.downLoadAll(app, list)
+        dl.downLoadAll(app, list, false)
 
         def modifier = new SVNGetFiles()
         def _list = modifier.modifyAttribute2Current(list)

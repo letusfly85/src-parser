@@ -31,7 +31,7 @@ class PageActionsRunner {
         String mode = args[0]
         if (mode == "all") {
           //download all page files and parse them
-          dl.downLoadAll(app, requestList)
+          dl.downLoadAll(app, requestList, false)
 
           //TODO avoid include JavaScript function source.
           def resultSets = parser.parse(app, svnList)

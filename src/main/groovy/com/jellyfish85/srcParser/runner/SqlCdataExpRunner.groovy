@@ -25,7 +25,7 @@ class SqlCdataExpRunner {
        def requestList = dao.convert(converter.convert(list))
 
        def dl     = new DownloadSource2Workspace()
-       dl.downLoadAll(app, requestList)
+       dl.downLoadAll(app, requestList, false)
 
        def register = new RsSqlCdataDao()
 
