@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qql>
+    <description>
+        <![CDATA[
+				this is test data
+			]]>
+    </description>
+
+    <jellyfish85>
+        <subject id="my.subjectId"/>
+    </jellyfish85>
+</qql>
