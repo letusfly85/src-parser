@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<businessLogics subjectGroupId="my.subjectGroupId">
+
+    <businessLogic subjectId="my.subjectId">
+
+        <description>
+            <![CDATA[
+				this is test data
+			]]>
+        </description>
+
+        <myDefine>
+            <define name="EMPLOYEE_MERGE" >
+                <dao table="EMPLOYEE" type="merge" ref="jellyfish85.com"/>
+            </define>
+        </myDefine>
+    </businessLogic>
+
+</businessLogics>
