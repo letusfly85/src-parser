@@ -109,6 +109,12 @@ task BlSubjectIdRunner (type: JavaExec) {
     args = project.runargs.split(',').toList()
 }
 
+task XqlSubjectIdRunner (type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "com.jellyfish85.srcParser.runner.XqlSubjectIdRunner"
+    args = project.runargs.split(',').toList()
+}
+
 task DtdXmlDownloadRunner (type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = "com.jellyfish85.srcParser.runner.DtdXmlDownloadRunner"
