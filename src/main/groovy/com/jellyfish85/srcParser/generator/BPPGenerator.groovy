@@ -34,7 +34,6 @@ class BPPGenerator {
                 new OutputStreamWriter(new FileOutputStream(targetFile),"UTF-8")))
 
         def targetProjectNames = app._targetProjectNames()
-        targetProjectNames.each {x -> println(x)}
         list.each {RsSubjectidBlpathIdxBean bean ->
             def projectName = helper.getProjectName(targetProjectNames, bean.pathAttr().value())
 
