@@ -4,6 +4,7 @@ import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSubjectidBlpathIdxBean
 import com.jellyfish85.srcParser.helper.ProjectNameHelper
 import com.jellyfish85.srcParser.utils.ApplicationProperties
 import org.apache.commons.io.FileUtils
+import org.apache.commons.lang.StringUtils
 
 /**
  * == BPPGenerator ==
@@ -36,7 +37,7 @@ class BPPGenerator {
         list.each {RsSubjectidBlpathIdxBean bean ->
             def projectName = helper.getProjectName(targetProjectNames, bean.pathAttr().value())
 
-            if (projectName != null && projectName != "") {
+            if (StringUtils.isEmpty(projectName)) {
                 def removePath   = app.ap() + projectName + app.logicPath()
                 def relativePath = bean.pathAttr().value().replace(removePath, "")
 
