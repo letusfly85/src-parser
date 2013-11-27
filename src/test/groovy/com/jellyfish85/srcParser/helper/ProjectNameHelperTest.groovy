@@ -41,10 +41,10 @@ class ProjectNameHelperTest {
 
     @Test
     void testGetProjectName() {
-        def testPath01 = "/src/main/resources/com/jellyfish85/HOGE_PROJECT/query"
+        def testPath01 = "/src/main/resources/com/jellyfish85/HOGE/HOGE_PROJECT/query"
         def testPath02 = "/src/main/resources/com/jellyfish85/XXXX_PROJECT/query"
 
-        assertThat(helper.getProjectName(projectNames, testPath01), is("HOGE_PROJECT"))
+        assertThat(helper.getProjectName(projectNames, testPath01), is("/HOGE/HOGE_PROJECT"))
         assertFalse(helper.getProjectName(projectNames, testPath02) == "HOGE_PROJECT" )
     }
 }
