@@ -22,7 +22,7 @@ class ProjectNameHelper {
         targetProjectNames.each {String projectName ->
             def reg = ".*" + projectName.replace("/", "\\/") + ".*"
             if (path =~ /${reg}/) {
-                result = projectName
+                return projectName
             }
         }
 
