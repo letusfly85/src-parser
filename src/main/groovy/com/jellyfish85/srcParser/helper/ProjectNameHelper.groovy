@@ -20,8 +20,9 @@ class ProjectNameHelper {
     public String getProjectName(ArrayList<String> targetProjectNames, String path) {
         def result = ""
         targetProjectNames.each {String projectName ->
-            def reg = ".*" + projectName.replace("/", "\\/") + ".*"
-            if (path =~ /${reg}/) {
+            String reg = ".*" + projectName.replace("/", "\\/") + ".*"
+            if (path.matches(reg)) {
+                result =  projectName
                 return projectName
             }
         }
