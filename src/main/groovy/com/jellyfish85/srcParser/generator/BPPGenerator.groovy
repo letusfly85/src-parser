@@ -36,10 +36,8 @@ class BPPGenerator {
         def targetProjectNames = app._targetProjectNames()
         list.each {RsSubjectidBlpathIdxBean bean ->
             String projectName = helper.getProjectName(targetProjectNames, bean.pathAttr().value())
-            println( bean.pathAttr().value() +  "\t" + projectName)
 
             if (!StringUtils.isBlank(projectName)) {
-            //if (projectName != "" && projectName != null) {
                 try {
                     def removePath   = app.ap() + projectName + app.logicPath()
                     def relativePath = bean.pathAttr().value().replace(removePath, "")
@@ -48,8 +46,10 @@ class BPPGenerator {
                     pw.write("\n")
 
                     println(bean.subjectIdAttr().value() + "=" + relativePath)
+
                 }  catch(Exception e) {
-                      e.printStackTrace()
+                    println("[ERROR]" + bean.pathAttr().value())
+                    e.printStackTrace()
                 }
 
             } else {

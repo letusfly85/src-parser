@@ -1,6 +1,7 @@
 package com.jellyfish85.srcParser.helper
 
 import com.jellyfish85.srcParser.utils.Stream2StringUtils
+import org.apache.commons.lang.StringUtils
 import org.junit.After
 import org.junit.Before
 
@@ -9,6 +10,8 @@ import static org.junit.Assert.assertThat
 import static org.hamcrest.CoreMatchers.*
 
 import org.junit.Test
+
+import static org.junit.Assert.assertTrue
 
 /**
  * == ProjectNameHelperTest ==
@@ -45,6 +48,7 @@ class ProjectNameHelperTest {
         def testPath02 = "/src/main/resources/com/jellyfish85/XXXX_PROJECT/query"
 
         assertThat(helper.getProjectName(projectNames, testPath01), is("/HOGE/HOGE_PROJECT"))
+        assertTrue(StringUtils.isBlank(helper.getProjectName(projectNames, testPath02)))
         assertFalse(helper.getProjectName(projectNames, testPath02) == "HOGE_PROJECT" )
     }
 }
