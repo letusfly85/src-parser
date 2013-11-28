@@ -36,7 +36,7 @@ class BPPGenerator {
         def targetProjectNames = app._targetProjectNames()
         list.each {RsSubjectidBlpathIdxBean bean ->
             String projectName = helper.getProjectName(targetProjectNames, bean.pathAttr().value())
-            println( bean.pathAttr().value() +  "\t" + projectName + " p")
+            println( bean.pathAttr().value() +  "\t" + projectName)
 
             //if (!StringUtils.isEmpty(projectName)) {
             if (projectName != "" && projectName != null) {
