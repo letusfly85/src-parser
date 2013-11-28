@@ -40,13 +40,17 @@ class BPPGenerator {
 
             //if (!StringUtils.isEmpty(projectName)) {
             if (projectName != "" && projectName != null) {
-                def removePath   = app.ap() + projectName + app.logicPath()
-                def relativePath = bean.pathAttr().value().replace(removePath, "")
+                try {
+                    def removePath   = app.ap() + projectName + app.logicPath()
+                    def relativePath = bean.pathAttr().value().replace(removePath, "")
 
-                pw.write(bean.subjectIdAttr().value() + "=" + relativePath)
-                pw.write("\n")
+                    pw.write(bean.subjectIdAttr().value() + "=" + relativePath)
+                    pw.write("\n")
 
-                println(bean.subjectIdAttr().value() + "=" + relativePath)
+                    println(bean.subjectIdAttr().value() + "=" + relativePath)
+                }  catch(Exception e) {
+                      e.printStackTrace()
+                }
 
             } else {
                 println("[WARN][Project Name is null]" + bean.pathAttr().value())
