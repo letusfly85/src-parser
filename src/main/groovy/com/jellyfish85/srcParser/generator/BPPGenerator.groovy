@@ -38,8 +38,8 @@ class BPPGenerator {
             String projectName = helper.getProjectName(targetProjectNames, bean.pathAttr().value())
             println( bean.pathAttr().value() +  "\t" + projectName)
 
-            //if (!StringUtils.isEmpty(projectName)) {
-            if (projectName != "" && projectName != null) {
+            if (!StringUtils.isBlank(projectName)) {
+            //if (projectName != "" && projectName != null) {
                 try {
                     def removePath   = app.ap() + projectName + app.logicPath()
                     def relativePath = bean.pathAttr().value().replace(removePath, "")
