@@ -35,7 +35,8 @@ class BPPGenerator {
 
         def targetProjectNames = app._targetProjectNames()
         list.each {RsSubjectidBlpathIdxBean bean ->
-            def projectName = helper.getProjectName(targetProjectNames, bean.pathAttr().value())
+            String projectName = helper.getProjectName(targetProjectNames, bean.pathAttr().value())
+            println(projectName + " p")
 
             if (StringUtils.isEmpty(projectName)) {
                 def removePath   = app.ap() + projectName + app.logicPath()
