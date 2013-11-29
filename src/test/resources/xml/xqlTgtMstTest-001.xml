@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<qql>
+    <description>
+        <![CDATA[
+				this is test data
+			]]>
+    </description>
+
+    <jellyfish85>
+        <parameter name="my.param"	key="my.key" ref="my.ref" tgtMst="MY_TABLE"	/>
+    </jellyfish85>
+</qql>
