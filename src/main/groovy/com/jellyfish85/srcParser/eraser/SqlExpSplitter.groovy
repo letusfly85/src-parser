@@ -22,9 +22,6 @@ class SqlExpSplitter extends SqlRegexHelper  {
               _mergeOpe = true
           }
 
-//          if (text.toUpperCase() =~ /.*([\s|\t]+)INSERT([\s|\t]+).*/ ||
-//              text.toUpperCase() =~ /.*([\s|\t]+)MERGE([\s|\t]+).*/  ||
-//              text.toUpperCase() =~ /.*([\s|\t]+)TRUNCATE([\s|\t]+).*/) {
           if (text.toUpperCase() =~ /.*([\s|\t]*)INSERT([\s|\t]+).*/ ||
               text.toUpperCase() =~ /.*([\s|\t]*)MERGE([\s|\t]+).*/  ||
               text.toUpperCase() =~ /.*([\s|\t]*)TRUNCATE([\s|\t]+).*/) {
