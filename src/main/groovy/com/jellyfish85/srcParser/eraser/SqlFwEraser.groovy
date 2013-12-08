@@ -62,7 +62,7 @@ class SqlFwEraser extends SqlRegexHelper {
         def thirdSqlText  = new SqlText()
 
         def cursor = 0
-        query.split("\n").eachWithIndex {line ->
+        query.split("\n").eachWithIndex {line, i ->
 
             if (line.matches(/.*\/\* fw_flg \*\/.*/)) {
                 return
