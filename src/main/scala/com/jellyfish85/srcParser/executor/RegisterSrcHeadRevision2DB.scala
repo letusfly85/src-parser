@@ -26,7 +26,7 @@ class RegisterSrcHeadRevision2DB extends ExecutorTrait {
 
     val projectNames: List[String] = ApplicationProperties.targetProjectNames
 
-    val getter: SVNGetFiles = new SVNGetFiles
+    val getter: SVNGetFiles[SVNRequestBean] = new SVNGetFiles
 
     val src: String =  ApplicationProperties.src
     def simpleFilter(bean: SVNRequestBean): Boolean = {

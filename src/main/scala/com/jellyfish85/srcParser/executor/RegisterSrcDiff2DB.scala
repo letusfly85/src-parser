@@ -39,7 +39,7 @@ class RegisterSrcDiff2DB extends ExecutorTrait with ProjectNameUtils {
     list.foreach {bean: SVNDiffBean =>
       println("[" + bean.modificationType.toString + "]\t" + bean.path)}
 
-    val modifier: SVNGetFiles = new SVNGetFiles
+    val modifier: SVNGetFiles[SVNDiffBean] = new SVNGetFiles
     val _list: List[SVNDiffBean] = modifier.modifyAttribute2Current(list)
 
     val converter: ConvSVNRequestBean2RsSvnSrcInfoBean = new ConvSVNRequestBean2RsSvnSrcInfoBean
