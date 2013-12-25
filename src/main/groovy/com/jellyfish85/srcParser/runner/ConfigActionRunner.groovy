@@ -2,7 +2,7 @@ package com.jellyfish85.srcParser.runner
 
 import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsConfigAttributesDao
 import com.jellyfish85.dbaccessor.manager.DatabaseManager
-import com.jellyfish85.srcParser.utils.ApplicationProperties
+import com.jellyfish85.srcParser.utils.SrcParserProp
 
 import com.jellyfish85.srcParser.downloader.DownloadSource2Workspace
 import com.jellyfish85.srcParser.parser.ConfigActionParser
@@ -16,7 +16,7 @@ class ConfigActionRunner {
         def db = new DatabaseManager()
         db.connect()
 
-        def app    = new ApplicationProperties()
+        def app    = new SrcParserProp()
         def dl     = new DownloadSource2Workspace()
         def parser = new ConfigActionParser()
 

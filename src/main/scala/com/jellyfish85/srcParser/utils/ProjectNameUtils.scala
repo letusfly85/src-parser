@@ -1,12 +1,12 @@
 package com.jellyfish85.srcParser.utils
 
 trait ProjectNameUtils {
-  val projectNameList: List[String] = ApplicationProperties.targetProjectNames
 
   def getProjectName(path: String): Option[String] = {
+    val parserProp: SrcParserProp = new SrcParserProp
 
-    projectNameList.foreach {projectName: String =>
-      val reg = ".*" +  ApplicationProperties.app + projectName + ".*"
+    parserProp.targetProjectNames.foreach {projectName: String =>
+      val reg = ".*" +  parserProp.app + projectName + ".*"
       if (path.matches(reg)) {
         return Some(projectName)
       }

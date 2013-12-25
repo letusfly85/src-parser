@@ -2,7 +2,7 @@ package com.jellyfish85.srcParser.parser
 
 import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsPageActionIdxBean
 import com.jellyfish85.dbaccessor.src.mainte.tool.RsSvnSrcInfoBean
-import com.jellyfish85.srcParser.utils.ApplicationProperties
+import com.jellyfish85.srcParser.utils.SrcParserProp
 import org.xml.sax.SAXParseException
 
 import javax.xml.parsers.DocumentBuilder
@@ -16,7 +16,7 @@ class PageActionParser {
     public PageActionParser() {}
 
     public static ArrayList<RsPageActionIdxBean> parse(
-            ApplicationProperties app,
+            SrcParserProp app,
             ArrayList<RsSvnSrcInfoBean> list
     ) {
 
@@ -31,7 +31,7 @@ class PageActionParser {
     }
 
     public static ArrayList<RsPageActionIdxBean> parse(
-            ApplicationProperties app,
+            SrcParserProp app,
             RsSvnSrcInfoBean bean
     ) {
         def resultSets = new ArrayList<RsPageActionIdxBean>()

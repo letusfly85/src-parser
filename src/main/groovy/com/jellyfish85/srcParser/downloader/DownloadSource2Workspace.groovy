@@ -1,6 +1,6 @@
 package com.jellyfish85.srcParser.downloader
 
-import com.jellyfish85.srcParser.utils.ApplicationProperties
+import com.jellyfish85.srcParser.utils.SrcParserProp
 import com.jellyfish85.svnaccessor.bean.SVNRequestBean
 import com.jellyfish85.svnaccessor.getter.SVNGetFiles
 import org.apache.commons.io.FileUtils
@@ -15,7 +15,7 @@ public class DownloadSource2Workspace {
      * @return
      */
     public static void downLoadAll(
-            ApplicationProperties app,
+            SrcParserProp app,
             ArrayList<SVNRequestBean> requestList
     ) {
 
@@ -31,7 +31,7 @@ public class DownloadSource2Workspace {
 
 
     public static void downLoadAll (
-            ApplicationProperties app,
+            SrcParserProp app,
             ArrayList<SVNRequestBean> list,
             Boolean cleanFlag
     ) {

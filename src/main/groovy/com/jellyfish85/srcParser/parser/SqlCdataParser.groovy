@@ -1,7 +1,7 @@
 package com.jellyfish85.srcParser.parser
 
 import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSqlCdataBean
-import com.jellyfish85.srcParser.utils.ApplicationProperties
+import com.jellyfish85.srcParser.utils.SrcParserProp
 import com.jellyfish85.svnaccessor.bean.SVNRequestBean
 import org.apache.commons.io.FilenameUtils
 import org.w3c.dom.Element
@@ -31,7 +31,7 @@ class SqlCdataParser {
      */
     public static ArrayList<RsSqlCdataBean> parse(
       ArrayList<SVNRequestBean> list,
-      ApplicationProperties app
+      SrcParserProp app
     ) {
         def resultSets = new ArrayList<RsSqlCdataBean>()
 
@@ -51,7 +51,7 @@ class SqlCdataParser {
      */
     public static ArrayList<RsSqlCdataBean> parse(
       SVNRequestBean bean,
-      ApplicationProperties app
+      SrcParserProp app
     ) {
         def resultSets = new ArrayList<RsSqlCdataBean>()
 
@@ -178,7 +178,7 @@ class SqlCdataParser {
      */
     public static ArrayList<RsSqlCdataBean> parseExp(
             ArrayList<SVNRequestBean> list,
-            ApplicationProperties app
+            SrcParserProp app
     ) {
         def resultSets = new ArrayList<RsSqlCdataBean>()
 
@@ -198,7 +198,7 @@ class SqlCdataParser {
      */
     public static ArrayList<RsSqlCdataBean> parseExp(
             SVNRequestBean bean,
-            ApplicationProperties app
+            SrcParserProp app
     ) {
         def resultSets = new ArrayList<RsSqlCdataBean>()
 

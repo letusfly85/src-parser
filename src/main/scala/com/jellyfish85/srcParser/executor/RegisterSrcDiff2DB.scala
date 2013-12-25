@@ -4,7 +4,7 @@ import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSvnSrcInfoDao
 import java.math.BigDecimal
 import com.jellyfish85.svnaccessor.bean.SVNDiffBean
 import com.jellyfish85.svnaccessor.getter.{SVNGetFiles, SVNDiffGetter}
-import com.jellyfish85.srcParser.utils.{ProjectNameUtils, ApplicationProperties}
+import com.jellyfish85.srcParser.utils.{ProjectNameUtils, SrcParserProp}
 import com.jellyfish85.svnaccessor.manager.SVNManager
 import com.jellyfish85.srcParser.converter.ConvSVNRequestBean2RsSvnSrcInfoBean
 import com.jellyfish85.dbaccessor.src.mainte.tool.RsSvnSrcInfoBean
@@ -31,7 +31,7 @@ class RegisterSrcDiff2DB extends ExecutorTrait with ProjectNameUtils {
     val preHeadRevision: BigDecimal = dao.findHeadRevision(db.conn)
 
     val manager: SVNManager = new SVNManager
-    val headPath: String = manager.repository.getLocation.toString + ApplicationProperties.app
+    val headPath: String = manager.repository.getLocation.toString + parserProp.app
 
     val getter: SVNDiffGetter = new SVNDiffGetter
     val list: List[SVNDiffBean] = getter.get(headPath, preHeadRevision.longValue())

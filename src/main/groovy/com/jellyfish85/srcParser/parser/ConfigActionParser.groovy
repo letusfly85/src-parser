@@ -2,7 +2,7 @@ package com.jellyfish85.srcParser.parser
 
 import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsConfigAttributesBean
 import com.jellyfish85.srcParser.converter.ConvSVNRequestBean2RsConfigAttributesBean
-import com.jellyfish85.srcParser.utils.ApplicationProperties
+import com.jellyfish85.srcParser.utils.SrcParserProp
 import com.jellyfish85.svnaccessor.bean.SVNRequestBean
 import org.w3c.dom.Element
 import org.xml.sax.SAXParseException
@@ -15,7 +15,7 @@ class ConfigActionParser {
     public ConfigActionParser() {}
 
     public static ArrayList<RsConfigAttributesBean> parse(
-            ApplicationProperties            app,
+            SrcParserProp            app,
             ArrayList<SVNRequestBean>        list
     ) throws FileNotFoundException {
         def resultSets = new ArrayList<RsConfigAttributesBean>()

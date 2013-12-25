@@ -4,7 +4,7 @@ import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsPageActionIdxDao
 import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSvnSrcInfoDao
 import com.jellyfish85.dbaccessor.manager.DatabaseManager
 import com.jellyfish85.srcParser.converter.ConvRsSvnSrcInfoBean2SVNRequestBean
-import com.jellyfish85.srcParser.utils.ApplicationProperties
+import com.jellyfish85.srcParser.utils.SrcParserProp
 
 import com.jellyfish85.srcParser.downloader.DownloadSource2Workspace
 import com.jellyfish85.srcParser.parser.PageActionParser
@@ -15,7 +15,7 @@ class PageActionsRunner {
         def db = new DatabaseManager()
         db.connect()
 
-        def app    = new ApplicationProperties()
+        def app    = new SrcParserProp()
         def dl     = new DownloadSource2Workspace()
         def parser = new PageActionParser()
 

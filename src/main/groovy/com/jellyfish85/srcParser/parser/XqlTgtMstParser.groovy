@@ -1,7 +1,7 @@
 package com.jellyfish85.srcParser.parser
 
 import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSqlTablesBean
-import com.jellyfish85.srcParser.utils.ApplicationProperties
+import com.jellyfish85.srcParser.utils.SrcParserProp
 import com.jellyfish85.svnaccessor.bean.SVNRequestBean
 import org.w3c.dom.Element
 import org.w3c.dom.Document
@@ -34,7 +34,7 @@ class XqlTgtMstParser {
      * @throws NullPointerException
      */
     public static ArrayList<RsSqlTablesBean> parse(
-            ApplicationProperties      app,
+            SrcParserProp      app,
             ArrayList<SVNRequestBean>  list
     ) throws java.io.IOException, NullPointerException {
 

@@ -1,46 +1,46 @@
 package com.jellyfish85.srcParser.utils
 
-import java.util.Properties
-import java.io._
+import org.apache.commons.configuration.{PropertiesConfiguration, Configuration}
+import java.io.{InputStreamReader, BufferedReader, InputStream}
 import java.util
 
-object ApplicationProperties {
+class SrcParserProp {
 
-  val property: Properties = new Properties()
+  val configuration: Configuration =
+    new PropertiesConfiguration("workspace.properties")
 
-  def load = property.load(getClass().getResourceAsStream("/workspace.properties"))
+  
+  val workspace:  String = configuration.getString("workspace")
 
-  def workspace:  String = {load; property.getProperty("workspace")}
+  val trunk:      String = configuration.getString("trunk")
 
-  def trunk:      String = {load; property.getProperty("trunk")}
+  val src:        String = configuration.getString("src")  
 
-  def src:        String = {load; property.getProperty("src")  }
+  val app:        String = configuration.getString("app")  
 
-  def app:        String = {load; property.getProperty("app")  }
+  val ap :        String = configuration.getString("app")  
 
-  def ap :        String = {load; property.getProperty("app")  }
+  val page:       String = configuration.getString("page")
 
-  def page:       String = {load; property.getProperty("page")}
+  val uql:        String = configuration.getString("uql")
 
-  def uql:        String = {load; property.getProperty("uql")}
+  val al:         String = configuration.getString("al")
 
-  def al:         String = {load; property.getProperty("al")}
+  val boj:        String = configuration.getString("boj")
 
-  def boj:        String = {load; property.getProperty("boj")}
+  val sql:        String = configuration.getString("sql")
 
-  def sql:        String = {load; property.getProperty("sql")}
+  val expSqlPath: String = configuration.getString("expSqlPath")
 
-  def expSqlPath: String = {load; property.getProperty("expSqlPath")}
+  val dtdPath:    String = configuration.getString("dtdPath")
 
-  def dtdPath:    String = {load; property.getProperty("dtdPath")}
+  val output:     String = configuration.getString("output")
 
-  def output:     String = {load; property.getProperty("output")}
+  val outputProp: String = configuration.getString("outputProp")
 
-  def outputProp: String = {load; property.getProperty("outputProp")}
+  val bpp:        String = configuration.getString("bpp")
 
-  def bpp:        String = {load; property.getProperty("bpp")}
-
-  def logicPath:  String = {load; property.getProperty("logicPath")}
+  val logicPath:  String = configuration.getString("logicPath")
 
 
   /**
@@ -109,10 +109,3 @@ object ApplicationProperties {
     list
   }
 }
-
-class ApplicationProperties {
-  val app = ApplicationProperties
-}
-
-
-

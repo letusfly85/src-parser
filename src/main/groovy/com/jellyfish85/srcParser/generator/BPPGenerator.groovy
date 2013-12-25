@@ -2,7 +2,7 @@ package com.jellyfish85.srcParser.generator
 
 import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSubjectidBlpathIdxBean
 import com.jellyfish85.srcParser.helper.ProjectNameHelper
-import com.jellyfish85.srcParser.utils.ApplicationProperties
+import com.jellyfish85.srcParser.utils.SrcParserProp
 import org.apache.commons.io.FileUtils
 import org.apache.commons.lang.StringUtils
 
@@ -16,7 +16,7 @@ import org.apache.commons.lang.StringUtils
 class BPPGenerator {
 
     public static void generate(
-            ApplicationProperties app,
+            SrcParserProp app,
             ArrayList<RsSubjectidBlpathIdxBean> list
     ) {
 

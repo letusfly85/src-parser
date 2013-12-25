@@ -1,6 +1,6 @@
 package com.jellyfish85.srcParser.helper
 
-import com.jellyfish85.srcParser.utils.ApplicationProperties
+import com.jellyfish85.srcParser.utils.SrcParserProp
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.FilenameUtils
 
@@ -13,7 +13,7 @@ import org.apache.commons.io.FilenameUtils
  */
 class DtdFolderHelper {
 
-    public static void copyDtdXml(ApplicationProperties app) {
+    public static void copyDtdXml(SrcParserProp app) {
 
         def constFolder    = FilenameUtils.getName(app.dtdPath())
         def constDirectory = new File(constFolder)

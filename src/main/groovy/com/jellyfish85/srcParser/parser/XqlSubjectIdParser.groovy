@@ -1,7 +1,7 @@
 package com.jellyfish85.srcParser.parser
 
 import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSubjectidXqlpathIdxBean
-import com.jellyfish85.srcParser.utils.ApplicationProperties
+import com.jellyfish85.srcParser.utils.SrcParserProp
 import com.jellyfish85.svnaccessor.bean.SVNRequestBean
 import org.w3c.dom.Element
 import org.xml.sax.SAXParseException
@@ -32,7 +32,7 @@ class XqlSubjectIdParser {
      * @throws NullPointerException
      */
     public static ArrayList<RsSubjectidXqlpathIdxBean> parse(
-            ApplicationProperties      app,
+            SrcParserProp      app,
             ArrayList<SVNRequestBean>  list
     ) throws java.io.IOException, NullPointerException {
         def workspace = app.workspace()

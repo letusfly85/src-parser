@@ -1,6 +1,6 @@
 package com.jellyfish85.srcParser.executor
 
-import com.jellyfish85.srcParser.utils.ApplicationProperties
+import com.jellyfish85.srcParser.utils.SrcParserProp
 import com.jellyfish85.svnaccessor.getter.SVNGetFiles
 import com.jellyfish85.svnaccessor.bean.SVNRequestBean
 import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSvnSrcInfoDao
@@ -24,11 +24,11 @@ class RegisterSrcHeadRevision2DB extends ExecutorTrait {
   def run(args: Array[String]){
     databaseInitialize
 
-    val projectNames: List[String] = ApplicationProperties.targetProjectNames
+    val projectNames: List[String] = parserProp.targetProjectNames
 
     val getter: SVNGetFiles[SVNRequestBean] = new SVNGetFiles
 
-    val src: String =  ApplicationProperties.src
+    val src: String =  parserProp.src
     def simpleFilter(bean: SVNRequestBean): Boolean = {
       bean.path.matches(".*" + src + "/.*")
     }
@@ -44,7 +44,7 @@ class RegisterSrcHeadRevision2DB extends ExecutorTrait {
     projectNames.foreach {projectName: String =>
       list = List()
 
-      val path = ApplicationProperties.app + projectName
+      val path = parserProp.app + projectName
       println("getting info " + path + " .....")
 
       list = getter.getSVNInfo(path, simpleFilter)
