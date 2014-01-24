@@ -4,10 +4,10 @@ import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSvnSrcInfoDao
 import java.math.BigDecimal
 import com.jellyfish85.svnaccessor.bean.SVNDiffBean
 import com.jellyfish85.svnaccessor.getter.{SVNGetFiles, SVNDiffGetter}
-import com.jellyfish85.srcParser.utils.{ProjectNameUtils, SrcParserProp}
+import com.jellyfish85.srcParser.utils.ProjectNameUtils
 import com.jellyfish85.svnaccessor.manager.SVNManager
 import com.jellyfish85.srcParser.converter.ConvSVNRequestBean2RsSvnSrcInfoBean
-import com.jellyfish85.dbaccessor.src.mainte.tool.RsSvnSrcInfoBean
+import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSvnSrcInfoBean
 
 /**
  * == RegisterSrcDiff2DB ==

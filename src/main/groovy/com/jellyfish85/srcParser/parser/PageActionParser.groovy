@@ -1,7 +1,7 @@
 package com.jellyfish85.srcParser.parser
 
 import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsPageActionIdxBean
-import com.jellyfish85.dbaccessor.src.mainte.tool.RsSvnSrcInfoBean
+import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSvnSrcInfoBean
 import com.jellyfish85.srcParser.utils.SrcParserProp
 import org.xml.sax.SAXParseException
 

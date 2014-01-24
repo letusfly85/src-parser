@@ -1,7 +1,7 @@
 package com.jellyfish85.srcParser.converter
 
 import com.jellyfish85.svnaccessor.bean.SVNRequestBean
-import com.jellyfish85.dbaccessor.src.mainte.tool.RsSvnSrcInfoBean
+import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSvnSrcInfoBean
 
 class ConvRsSvnSrcInfoBean2SVNRequestBean {
 

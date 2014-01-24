@@ -1,11 +1,10 @@
 package com.jellyfish85.srcParser.executor
 
-import com.jellyfish85.srcParser.utils.SrcParserProp
 import com.jellyfish85.svnaccessor.getter.SVNGetFiles
 import com.jellyfish85.svnaccessor.bean.SVNRequestBean
 import com.jellyfish85.dbaccessor.dao.src.mainte.tool.RsSvnSrcInfoDao
 import com.jellyfish85.srcParser.converter.ConvSVNRequestBean2RsSvnSrcInfoBean
-import com.jellyfish85.dbaccessor.src.mainte.tool.RsSvnSrcInfoBean
+import com.jellyfish85.dbaccessor.bean.src.mainte.tool.RsSvnSrcInfoBean
 
 /**
  * == RegisterSrcHeadRevision2DB ==
