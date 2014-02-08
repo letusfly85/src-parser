@@ -26,6 +26,9 @@ class SVNDiffViewGenerator {
     public void generate() {
         def _beans = dao.findAll(conn)
         ArrayList<TrCommitHistoryBean> beans = dao.convert(_beans)
+        beans.collect {x ->
+            x.pathAttr().setValue(x.pathAttr().value().replace(("/" + srcProp.unusedName() + "/"), ""))
+        }
 
         String path = "/template/commits_only2trunk.template"
 

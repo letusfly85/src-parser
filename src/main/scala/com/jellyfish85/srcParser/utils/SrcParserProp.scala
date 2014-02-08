@@ -122,6 +122,8 @@ class SrcParserProp {
 
   val hrefHeader: String = parserConfiguration.getString("redmine.url.revision.header")
 
+  val unusedName: String = parserConfiguration.getString("redmine.url.unused.name")
+
   val subversionBaseUrl: String =
               parserConfiguration.getString("subversion.url.base")
 
