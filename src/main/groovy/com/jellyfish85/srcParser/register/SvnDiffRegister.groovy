@@ -109,6 +109,8 @@ class SvnDiffRegister {
 
         TrCommitHistoryDao historyDao = new TrCommitHistoryDao()
         db.connect()
+        historyDao.deleteAll(db.conn())
+        db.jCommit()
         historyDao.insert(db.conn(), historyBeans)
         db.jCommit()
 
