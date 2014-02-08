@@ -1,0 +1,95 @@
+<% import com.jellyfish85.dbaccessor.bean.src.mainte.tool.TrCommitHistoryBean %>\
+<html>
+<head>
+<style type="text/css"><!--
+
+.mst {
+    border-spacing: 0;
+    width: 100%;
+    font-family: Verdana, Roboto, 'Droid Sans', 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic P     roN', sans-serif;
+}
+        .mst tr {
+}
+        .mst th {
+    border: 0;
+    box-shadow: 0 0 10px 1px #CEECF5;
+    padding: 0;
+    font-size: 10;
+    border-bottom: 1px solid black;
+    border-right:  1px solid #555;
+    background-color: orange;
+    height :30px;
+    color :black;
+}
+
+        .mst th:hover {
+    background-color:yellow;
+    color:black;
+    /*-moz-box-shadow:10px 10px 20px #ffff99;*/
+    filter:alpha(opacity=80);
+    opacity:0.8;
+}
+
+        .mst tr {
+    background-color: white;
+}
+
+        .mst td {
+    border: 0;
+    border-bottom: 1px dashed #5858FA;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+}
+
+-->
+</style>
+  </head>
+<body>
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+
+<script type="text/javascript" src="jquery-1.8.2.js"></script>
+    <script type="text/javascript" src="stupidtable.js"></script>
+<script type="text/javascript" src="stupidtable.min.js"></script>
+    <script type="text/javascript">// <![CDATA[
+\$(function() {
+    \$("#simpleTable").stupidtable();
+});
+// ]]>
+</script>
+
+    <table id ="simpleTable" class="mst">
+      <thead>
+      <th data-sort="string"style="border-top-left-radius: 10px; width: 40px">差分</th>
+<th data-sort="Int"style=" width: 70px">リビジョン</th>
+      <th data-sort="string">更新者</th>
+<th data-sort="string">コメント</th>
+      <th style="border-top-right-radius: 10px;"data-sort="string">ソース</th>
+<tr/>
+</thead>
+      <tbody>
+<% beans.each {l -> %>\
+    <td style="width: 50px">
+<% if (l.actionAttr().value() == "M") { %>\
+変更
+<%  } else if (l.actionAttr().value() == "A") { %>\
+新規
+<%  } else if (l.actionAttr().value() == "D") { %>\
+削除
+<% } %>\
+</td>
+<% String href = hrefHeader + l.revisionAttr().value() %>\
+<td style="width: 80px"><a href=${href}>${l.revisionAttr().value()}</a></td>
+<td style="width: 60px">${l.committerAttr().value()}</td>
+    <td style="width: 600px">${l.commentsAttr().value()}</td>
+<% String path = hrefHeader + l.revisionAttr().value() + "/entry/" + l.pathAttr().value() %>\
+
+<td style="width: 40px"><a href=${path}>
+        ${l.fileNameAttr().value()}
+</a></td>
+<tr/>
+<% } %>
+</tbody>
+    </table>
+</body>
+</html>

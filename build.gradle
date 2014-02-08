@@ -138,3 +138,9 @@ task SvnDiffRegisterRunner (type: JavaExec) {
     main = "com.jellyfish85.srcParser.runner.SvnDiffRegisterRunner"
     args = project.runargs.split(',').toList()
 }
+
+task SVNDiffViewRunner (type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "com.jellyfish85.srcParser.runner.SVNDiffViewRunner"
+    args = project.runargs.split(',').toList()
+}
