@@ -40,6 +40,8 @@ dependencies {
 
     runtime files('lib/ojdbc14.jar')
 
+    runtime files('lib/mysql-connector-java-5.1.25-bin.jar')
+
     testCompile      'junit:junit:4.11'
 
     testCompile      group: "org.specs2", name: "specs2_2.9.2", version:"1.12.1"
@@ -128,5 +130,11 @@ task DtdXmlDownloadRunner (type: JavaExec) {
 task BPPGRunner (type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = "com.jellyfish85.srcParser.runner.BPPGRunner"
+    args = project.runargs.split(',').toList()
+}
+
+task SvnDiffRegisterRunner (type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "com.jellyfish85.srcParser.runner.SvnDiffRegisterRunner"
     args = project.runargs.split(',').toList()
 }

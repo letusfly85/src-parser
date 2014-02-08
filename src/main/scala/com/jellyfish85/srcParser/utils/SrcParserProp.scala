@@ -120,11 +120,15 @@ class SrcParserProp {
   val parserConfiguration: Configuration =
     new PropertiesConfiguration("properties/src-parser.properties")
 
+  val subversionBaseUrl: String =
+              parserConfiguration.getString("subversion.url.base")
+
   val subversionBranchProduct: String =
               parserConfiguration.getString("subversion.branch.product")
 
   val subversionBranchDevelop: String =
               parserConfiguration.getString("subversion.branch.develop")
 
-
+  val subversionRepositoryName: String =
+              parserConfiguration.getString("subversion.repository.name")
 }
