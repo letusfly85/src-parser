@@ -1,13 +1,16 @@
 package com.jellyfish85.srcParser.register
 
+import com.jellyfish85.dbaccessor.bean.src.mainte.tool.TrCommitHistoryBean
+import com.jellyfish85.dbaccessor.bean.src.mainte.tool.VChangesetsBean
+import com.jellyfish85.dbaccessor.dao.src.mainte.tool.TrCommitHistoryDao
 import com.jellyfish85.dbaccessor.dao.src.mainte.tool.VChangesetsDao
 import com.jellyfish85.dbaccessor.manager.DatabaseManager
 import com.jellyfish85.srcParser.BaseContext
+import com.jellyfish85.srcParser.converter.ConvVChangesetsBean2TrCommitHistoryBean
 import com.jellyfish85.srcParser.utils.SrcParserProp
 import com.jellyfish85.svnaccessor.bean.SVNDiffBean
 import com.jellyfish85.svnaccessor.getter.SVNDiffGetter
 import com.jellyfish85.svnaccessor.manager.SVNManager
-import org.tmatesoft.svn.core.internal.io.svn.SVNAbstractTunnelConnector
 
 import java.sql.Connection
 
@@ -87,33 +90,46 @@ class SvnDiffRegister {
         setUrl2(developUrl)
         setRevision2(developRevision)
 
-        //ArrayList<SVNDiffBean> leftAry  = getLeftDiffs()
-        ArrayList<SVNDiffBean> rightAry = getRightDiffs()
-
-
-        ArrayList<SVNDiffBean> _rightAry = new ArrayList<>()
+        ArrayList<SVNDiffBean> rightAry  = getRightDiffs()
+        ArrayList<VChangesetsBean> _rightAry = new ArrayList<>()
         rightAry.each {bean ->
-            println(bean.path())
+            println(bean.path() + "\t" + bean.revision().toString())
             bean.setPath(bean.path().replace(srcProp.subversionBaseUrl(), ""))
-
-            println(bean.path())
-            println(bean.revision())
             _rightAry.add(dao.findUnique(conn, new BigDecimal(bean.revision()), bean.path()))
         }
-        _rightAry.each {bean ->
-            println(bean.fileName() + "\t" + bean.url())
-            println(bean.revision().toString())
-            println(bean.author() + "\t" + bean.comment())
+
+        _rightAry.each {VChangesetsBean bean ->
+            println(bean.fileNameAttr().value() + "\t" + bean.revisionAttr().value().toString() +
+                    bean.commentsAttr().value() + "\t" + bean.commentsAttr().value()
+                   )
         }
 
+        ConvVChangesetsBean2TrCommitHistoryBean converter = new ConvVChangesetsBean2TrCommitHistoryBean()
+        ArrayList<TrCommitHistoryBean> historyBeans = converter.convert(_rightAry, developUrl, productUrl)
 
+        TrCommitHistoryDao historyDao = new TrCommitHistoryDao()
+        db.connect()
+        historyDao.insert(db.conn(), historyBeans)
+        db.jCommit()
+
+        //System.exit(0)
 
         /*
+        ArrayList<SVNDiffBean> leftAry   = getLeftDiffs()
+        ArrayList<SVNDiffBean> _leftAry  = getLeftDiffs()
         leftAry.each {bean ->
-            println(bean.fileName() + "\t" + bean.url())
-            println(bean.comment())
+            println(bean.path() + "\t" + bean.revision().toString())
+            bean.setPath(bean.path().replace(srcProp.subversionBaseUrl(), ""))
+            _leftAry.add(dao.findUnique(conn, new BigDecimal(bean.revision()), bean.path()))
+        }
+
+        _leftAry.each {VChangesetsBean bean ->
+            println(bean.fileNameAttr().value() + "\t" + bean.revisionAttr().value().toString() +
+                    bean.commentsAttr().value() + "\t" + bean.commentsAttr().value()
+            )
         }
         */
+
     }
 
 
