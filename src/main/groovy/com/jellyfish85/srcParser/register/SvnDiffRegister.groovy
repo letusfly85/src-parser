@@ -13,6 +13,7 @@ import com.jellyfish85.svnaccessor.getter.SVNDiffGetter
 import com.jellyfish85.svnaccessor.manager.SVNManager
 
 import java.sql.Connection
+import java.sql.SQLException
 
 class SvnDiffRegister {
 
@@ -76,6 +77,15 @@ class SvnDiffRegister {
     }
 
     public void register() {
+        ConvVChangesetsBean2TrCommitHistoryBean converter = new ConvVChangesetsBean2TrCommitHistoryBean()
+        ArrayList<TrCommitHistoryBean> historyBeans = new ArrayList<>()
+
+        TrCommitHistoryDao historyDao = new TrCommitHistoryDao()
+        db.connect()
+        historyDao.deleteAll(db.conn())
+        db.jCommit()
+
+
         String productUrl = this.srcProp.subversionBaseUrl() + this.srcProp.subversionBranchProduct()
 
         Long   productRevision = manager.getRepository(productUrl).getLatestRevision()
@@ -90,49 +100,61 @@ class SvnDiffRegister {
         setUrl2(developUrl)
         setRevision2(developRevision)
 
-        ArrayList<SVNDiffBean> rightAry  = getRightDiffs()
+        ArrayList<SVNDiffBean> rightAry      = getRightDiffs()
         ArrayList<VChangesetsBean> _rightAry = new ArrayList<>()
         rightAry.each {bean ->
-            println(bean.path() + "\t" + bean.revision().toString())
-            bean.setPath(bean.path().replace(srcProp.subversionBaseUrl(), ""))
-            _rightAry.add(dao.findUnique(conn, new BigDecimal(bean.revision()), bean.path()))
+            try {
+                BigDecimal _revision = null
+                    if (bean.revision() == null) {
+                        _revision = new BigDecimal(bean.headRevision())
+
+                    } else {
+                        _revision = new BigDecimal(bean.revision())
+                }
+                _rightAry.add(dao.findUnique(conn, _revision, bean.path()))
+
+            } catch(SQLException e) {
+                VChangesetsBean _bean = new VChangesetsBean()
+                _bean.actionAttr().setValue("N")
+                _bean.pathAttr().setValue(bean.path())
+                _bean.fileNameAttr().setValue(bean.fileName())
+                _rightAry.add(_bean)
+
+                println("[WARN]cannot get info: " + bean.path())
+            }
         }
 
-        _rightAry.each {VChangesetsBean bean ->
-            println(bean.fileNameAttr().value() + "\t" + bean.revisionAttr().value().toString() +
-                    bean.commentsAttr().value() + "\t" + bean.commentsAttr().value()
-                   )
-        }
-
-        ConvVChangesetsBean2TrCommitHistoryBean converter = new ConvVChangesetsBean2TrCommitHistoryBean()
-        ArrayList<TrCommitHistoryBean> historyBeans = converter.convert(_rightAry, developUrl, productUrl)
-
-        TrCommitHistoryDao historyDao = new TrCommitHistoryDao()
-        db.connect()
-        historyDao.deleteAll(db.conn())
-        db.jCommit()
+        historyBeans = converter.convert(_rightAry, developUrl, productUrl)
         historyDao.insert(db.conn(), historyBeans)
         db.jCommit()
 
-        //System.exit(0)
-
-        /*
-        ArrayList<SVNDiffBean> leftAry   = getLeftDiffs()
-        ArrayList<SVNDiffBean> _leftAry  = getLeftDiffs()
+        ArrayList<SVNDiffBean> leftAry       = getLeftDiffs()
+        ArrayList<VChangesetsBean> _leftAry  = new ArrayList<>()
         leftAry.each {bean ->
-            println(bean.path() + "\t" + bean.revision().toString())
-            bean.setPath(bean.path().replace(srcProp.subversionBaseUrl(), ""))
-            _leftAry.add(dao.findUnique(conn, new BigDecimal(bean.revision()), bean.path()))
+            try {
+                BigDecimal _revision = null
+                if (bean.revision() == null) {
+                    _revision = new BigDecimal(bean.headRevision())
+
+                } else {
+                    _revision = new BigDecimal(bean.revision())
+                }
+                _leftAry.add(dao.findUnique(conn, _revision, bean.path()))
+
+            } catch(SQLException e) {
+                VChangesetsBean _bean = new VChangesetsBean()
+                _bean.actionAttr().setValue("N")
+                _bean.pathAttr().setValue(bean.path())
+                _bean.fileNameAttr().setValue(bean.fileName())
+                _leftAry.add(_bean)
+
+                println("[WARN]cannot get info: " + bean.path())
+            }
         }
 
-        _leftAry.each {VChangesetsBean bean ->
-            println(bean.fileNameAttr().value() + "\t" + bean.revisionAttr().value().toString() +
-                    bean.commentsAttr().value() + "\t" + bean.commentsAttr().value()
-            )
-        }
-        */
+        historyBeans = converter.convert(_leftAry, productUrl, developUrl)
+        historyDao.insert(db.conn(), historyBeans)
+        db.jCommit()
 
     }
-
-
 }

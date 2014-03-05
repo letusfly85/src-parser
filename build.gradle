@@ -144,3 +144,9 @@ task SVNDiffViewRunner (type: JavaExec) {
     main = "com.jellyfish85.srcParser.runner.SVNDiffViewRunner"
     args = project.runargs.split(',').toList()
 }
+
+task SVNDiffCheckSumRunner (type: JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = "com.jellyfish85.srcParser.runner.SVNDiffCheckSumRunner"
+    args = project.runargs.split(',').toList()
+}

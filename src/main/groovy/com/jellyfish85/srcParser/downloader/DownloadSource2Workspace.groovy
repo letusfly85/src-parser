@@ -44,4 +44,13 @@ public class DownloadSource2Workspace {
         getter.simpleGetFilesWithDirectory(list, workspace, cleanFlag)
     }
 
+    public static void simpleDownload(SVNRequestBean bean, String folder) {
+        File dir = new File("output/${folder}")
+        FileUtils.forceMkdir(dir)
+
+        def getter = new SVNGetFiles()
+
+        getter.simpleGetFile(bean, dir, "")
+    }
+
 }
