@@ -14,6 +14,7 @@
 		<script type="text/javascript" src="js/modernizr.custom.04022.js"></script>
 		<link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700,300,300italic' rel='stylesheet' type='text/css'>
         <style>
+            /*
             .content{
                 height: auto;
                 margin: 0;
@@ -21,6 +22,7 @@
             .content div {
                 position: relative;
             }
+            */
             .content {
             border-spacing: 0;
             width: 100%;
@@ -29,15 +31,20 @@
             .content tr {
             }
             .content th {
-            border: 0;
-            box-shadow: 0 0 10px 1px #CEECF5;
-            padding: 0;
-            font-size: 10;
-            border-bottom: 1px solid black;
-            border-right:  1px solid #555;
-            background-color: orange;
-            height :30px;
-            color :black;
+                background: #b0c4de;
+                background: -moz-linear-gradient(top, #b0c4de 0%, #4e8c8a 100%);
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#b0c4de), color-stop(100%,#4e8c8a));
+                background: -webkit-linear-gradient(top, #b0c4de 0%,#4e8c8a 100%);
+                background: -o-linear-gradient(top, #b0c4de 0%,#4e8c8a 100%);
+                background: -ms-linear-gradient(top, #b0c4de 0%,#4e8c8a 100%);
+                background: linear-gradient(top, #b0c4de 0%,#4e8c8a 100%);
+                font-size: 12px;
+                line-height: 20px;
+                padding: 0 20px;
+                color: #385c5b;
+                text-shadow: 1px 1px 1px rgba(255,255,255,0.3);
+                border-radius: 3px 3px 0 0;
+                box-shadow: 2px 0 2px rgba(0,0,0,0.1), -2px 0 2px rgba(0,0,0,0.1);
             }
 
             .content th:hover {
