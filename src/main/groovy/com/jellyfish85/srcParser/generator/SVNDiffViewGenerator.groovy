@@ -24,11 +24,24 @@ class SVNDiffViewGenerator {
     }
 
     public void generate() {
-        def _beans = dao.findAll(conn)
-        ArrayList<TrCommitHistoryBean> beans = dao.convert(_beans)
-        beans.collect {x ->
+        def _beansDiffs = dao.findDiffs(conn, this.srcProp.subversionBranchDevelop())
+        ArrayList<TrCommitHistoryBean> beansDiffs = dao.convert(_beansDiffs)
+        beansDiffs.collect {x ->
             x.pathAttr().setValue(x.pathAttr().value().replace(("/" + srcProp.unusedName() + "/"), ""))
         }
+
+        def _beansLeftNotExists = dao.findNotExists(conn, this.srcProp.subversionBranchDevelop())
+        ArrayList<TrCommitHistoryBean> beansLeftNotExists = dao.convert(_beansLeftNotExists)
+        beansLeftNotExists.collect {x ->
+            x.pathAttr().setValue(x.pathAttr().value().replace(("/" + srcProp.unusedName() + "/"), ""))
+        }
+
+        def _beansRightNotExists = dao.findNotExists(conn, this.srcProp.subversionBranchProduct())
+        ArrayList<TrCommitHistoryBean> beansRightNotExists = dao.convert(_beansRightNotExists)
+        beansRightNotExists.collect {x ->
+            x.pathAttr().setValue(x.pathAttr().value().replace(("/" + srcProp.unusedName() + "/"), ""))
+        }
+
 
         //String path = "/template/commits_only2trunk.template"
         String path = "/template/commit_history.template.html"
@@ -37,7 +50,9 @@ class SVNDiffViewGenerator {
         String hrefHeader = srcProp.hrefHeader()
         Map map = [
              hrefHeader: hrefHeader,
-             beans: beans
+                beansDiffs          : beansDiffs,
+                beansLeftNotExists  : beansLeftNotExists,
+                beansRightNotExists : beansRightNotExists
         ]
 
          SimpleTemplateEngine engine  = new SimpleTemplateEngine()

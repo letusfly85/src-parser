@@ -22,8 +22,53 @@
 				.content div {
 					position: relative;
 				}
-			</style>
-		<![endif]-->
+                .mst {
+                border-spacing: 0;
+                width: 100%;
+                font-family: Verdana, Roboto, 'Droid Sans', 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック', 'ヒラギノ角ゴ Pro W3', 'Hiragino Kaku Gothic P     roN', sans-serif;
+                }
+                .mst tr {
+                }
+                .mst th {
+                border: 0;
+                box-shadow: 0 0 10px 1px #CEECF5;
+                padding: 0;
+                font-size: 10;
+                border-bottom: 1px solid black;
+                border-right:  1px solid #555;
+                background-color: orange;
+                height :30px;
+                color :black;
+                }
+
+                .mst th:hover {
+                background-color:yellow;
+                color:black;
+                /*-moz-box-shadow:10px 10px 20px #ffff99;*/
+                filter:alpha(opacity=80);
+                opacity:0.8;
+                }
+
+                .mst tr {
+                background-color: white;
+                }
+
+                .mst td {
+                border: 0;
+                border-bottom: 1px dashed #5858FA;
+                border-left: 1px solid rgba(0, 0, 0, 0.1);
+                border-right: 1px solid rgba(0, 0, 0, 0.1);
+                font-size: 14px;
+                }
+            </style>
+            <script type="text/javascript" src="stupidtable.min.js"></script>
+            <script type="text/javascript">// <![CDATA[
+                \$(function() {
+                    \$("#simpleTable").stupidtable();
+                });
+                // ]]>
+                </script>
+		    <![endif]-->
     </head>
     <body>
         <div class="container">
@@ -55,7 +100,7 @@
                             <tr/>
                             </thead>
                             <tbody>
-                            <% beans.each {l -> %>\
+                            <% beansDiffs.each {l -> %>\
                             <td style="width: 50px">
                                 <% if (l.actionAttr().value() == "M") { %>\
                                 変更
@@ -90,7 +135,7 @@
                             <tr/>
                             </thead>
                             <tbody>
-                            <% beans.each {l -> %>\
+                            <% beansLeftNotExists.each {l -> %>\
                             <td style="width: 50px">
                                 <% if (l.actionAttr().value() == "M") { %>\
                                 変更
@@ -125,7 +170,7 @@
                             <tr/>
                             </thead>
                             <tbody>
-                            <% beans.each {l -> %>\
+                            <% beansRightNotExists.each {l -> %>\
                             <td style="width: 50px">
                                 <% if (l.actionAttr().value() == "M") { %>\
                                 変更
