@@ -30,7 +30,8 @@ class SVNDiffViewGenerator {
             x.pathAttr().setValue(x.pathAttr().value().replace(("/" + srcProp.unusedName() + "/"), ""))
         }
 
-        String path = "/template/commits_only2trunk.template"
+        //String path = "/template/commits_only2trunk.template"
+        String path = "/template/commit_history.template.html"
 
         File template     = new File(getClass().getResource(path).toURI())
         String hrefHeader = srcProp.hrefHeader()
